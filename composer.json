@@ -1,0 +1,57 @@
+{
+    "name": "grayloon/laravel-magento-storage",
+    "description": "Magento 2 REST API Wrapper to export Magento data to use in your Laravel application.",
+    "keywords": [
+        "grayloon",
+        "laravel-magento-storage"
+    ],
+    "homepage": "https://github.com/grayloon/magento-laravel-storage",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Gray Loon Marketing Group",
+            "email": "webmaster@grayloon.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "grayloon/laravel-magento-api": "^0.4",
+        "guzzlehttp/guzzle": "^6.0",
+        "illuminate/support": "^7.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "orchestra/testbench": "^5.3",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Grayloon\\MagentoStorage\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Grayloon\\MagentoStorage\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Grayloon\\MagentoStorage\\MagentoStorageServiceProvider"
+            ],
+            "aliases": {
+                "MagentoStorage": "Grayloon\\MagentoStorage\\MagentoStorageFacade"
+            }
+        }
+    }
+}
