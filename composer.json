@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.4",
-        "grayloon/laravel-magento-api": "^0.4",
+        "grayloon/laravel-magento-api": "dev-master",
         "guzzlehttp/guzzle": "^6.0",
         "illuminate/support": "^7.0"
     },
