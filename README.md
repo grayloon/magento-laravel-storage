@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/grayloon/laravel-magento-storage/actions"><img src="https://github.com/grayloon/laravel-magento-storage/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://github.com/grayloon/magento-laravel-storage/actions"><img src="https://github.com/grayloon/magento-laravel-storage/workflows/tests/badge.svg" alt="Build Status"></a>
 <a href="https://packagist.org/packages/grayloon/laravel-magento-storage"><img src="https://img.shields.io/packagist/v/grayloon/laravel-magento-api.svg?style=flat" alt="Latest Stable Version"></a>
 <a href="https://github.styleci.io/repos/277585119?branch=master"><img src="https://github.styleci.io/repos/277585119/shield?branch=master" alt="Style CI"></a>
 <a href="https://packagist.org/packages/grayloon/laravel-magento-storage"><img src="https://img.shields.io/packagist/dt/grayloon/laravel-magento-api?style=flat" alt="Total Downloads"></a>
