@@ -49,7 +49,7 @@ class MagentoStorageServiceProvider extends ServiceProvider
     private function registerMigrations()
     {
         if ($this->app->runningInConsole()) {
-            $this->loadMigrationsFrom(__DIR__.'/Storage/migrations');
+            $this->loadMigrationsFrom(__DIR__.'/Database/Migrations');
         }
     }
 
