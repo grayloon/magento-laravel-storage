@@ -8,7 +8,7 @@
 
 # Laravel - Store Magento Data
 
-A optional opinionated storage system for consuming Magento 2 data in your Laravel application. 
+An opinionated storage system for consuming Magento 2 data in Laravel applications.
 
 ## Installation
 
