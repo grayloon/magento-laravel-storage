@@ -13,7 +13,7 @@ class HasMagentoCartTest extends TestCase
     {
         $this->assertFalse((new FakeHasMagentoCart())->fakeExistingCart());
     }
-    
+
     public function test_existing_cart_is_true_on_guest_with_cart()
     {
         $this->session(['g_cart' => 'foo']);
@@ -46,7 +46,7 @@ class HasMagentoCartTest extends TestCase
         $response = [
             [
                 'item_id' => 1,
-            ]
+            ],
         ];
         Http::fake([
             '*/guest-carts/foo/items' => Http::response($response, 200),
@@ -74,7 +74,7 @@ class HasMagentoCartTest extends TestCase
         $response = [
             [
                 'item_id' => 1,
-            ]
+            ],
         ];
         Http::fake([
             '*/carts/mine/items' => Http::response($response, 200),
