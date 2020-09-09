@@ -8,14 +8,14 @@ use Grayloon\MagentoStorage\Tests\TestCase;
 
 class HasMagentoAuthenticationTest extends TestCase
 {
-    public function test_customerIsSignedIn_is_true()
+    public function test_customer_is_signed_in_is_true()
     {
         $this->actingAs(factory(MagentoCustomer::class)->create());
 
         $this->assertTrue((new FakeHasMagentoAuthentication())->fakeCustomerIsSignedIn());
     }
 
-    public function test_customerIsSignedIn_is_false()
+    public function test_customer_is_signed_in_is_false()
     {
         $this->assertFalse((new FakeHasMagentoAuthentication())->fakeCustomerIsSignedIn());
     }
