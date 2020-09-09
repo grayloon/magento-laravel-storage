@@ -2,8 +2,8 @@
 
 namespace Grayloon\MagentoStorage\Support;
 
-use Illuminate\Support\Facades\Auth;
 use Grayloon\MagentoStorage\Models\MagentoCustomer;
+use Illuminate\Support\Facades\Auth;
 
 trait HasMagentoAuthentication
 {
@@ -14,6 +14,6 @@ trait HasMagentoAuthentication
      */
     protected function customerIsSignedIn()
     {
-        return (Auth::user() instanceof MagentoCustomer);
+        return Auth::user() instanceof MagentoCustomer;
     }
 }
