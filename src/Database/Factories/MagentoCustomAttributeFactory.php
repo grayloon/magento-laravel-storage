@@ -1,19 +1,33 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Faker\Generator as Faker;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MagentoCustomAttribute::class, function (Faker $faker) {
-    return [
-        'attribute_type'      => $faker->catchPhrase,
-        'attribute_type_id'   => factory(MagentoCustomAttributeType::class)->create(),
-        'value'               => $faker->catchPhrase,
-        'attributable_type'   => $faker->randomElement([MagentoProduct::class, MagentoCategory::class]),
-        'attributable_id'     => fn (array $attribute) => factory($attribute['attributable_type']),
-    ];
-});
+class MagentoCustomAttributeFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = MagentoCustomAttribute::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'attribute_type'      => $this->faker->catchPhrase,
+            'attribute_type_id'   => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'               => $this->faker->catchPhrase,
+            'attributable_type'   => $this->faker->randomElement([MagentoProduct::class, MagentoCategory::class]),
+            'attributable_id'     => fn (array $attribute) => factory($attribute['attributable_type']),
+        ];
+    }
+}

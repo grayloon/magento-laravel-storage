@@ -1,18 +1,32 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Faker\Generator as Faker;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MagentoProductMedia::class, function (Faker $faker) {
-    return [
-        'id'          => rand(1, 10000),
-        'product_id'  => factory(MagentoProduct::class)->create(),
-        'media_type'  => 'image',
-        'position'    => 1,
-        'disabled'    => false,
-        'file'        => '/f/foo.jpg',
-    ];
-});
+class MagentoProductMediaFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = MagentoProductMedia::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'id'          => rand(1, 10000),
+            'product_id'  => MagentoProductFactory::new()->create(),
+            'media_type'  => 'image',
+            'position'    => 1,
+            'disabled'    => false,
+            'file'        => '/f/foo.jpg',
+        ];
+    }
+}

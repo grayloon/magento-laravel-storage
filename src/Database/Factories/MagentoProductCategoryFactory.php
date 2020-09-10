@@ -1,14 +1,29 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductCategory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MagentoProductCategory::class, function () {
-    return [
-        'magento_product_id'  => factory(MagentoProduct::class)->create(),
-        'magento_category_id' => factory(MagentoCategory::class)->create(),
-    ];
-});
+class MagentoProductCategoryFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = MagentoProductCategory::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'magento_product_id'  => MagentoProductFactory::new()->create(),
+            'magento_category_id' => MagentoCategoryFactory::new()->create(),
+        ];
+    }
+}

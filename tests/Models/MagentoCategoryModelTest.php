@@ -2,6 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
@@ -11,15 +12,16 @@ class MagentoCategoryModelTest extends TestCase
 {
     public function test_can_create_magento_category()
     {
-        $category = factory(MagentoCategory::class)->create();
+        $category = MagentoCategoryFactory::new()->create();
 
         $this->assertNotEmpty($category);
+        $this->assertInstanceOf(MagentoCategory::class, $category);
     }
 
     public function test_magento_category_can_have_parent_category()
     {
-        $category = factory(MagentoCategory::class)->create([
-            'parent_id' => $parent = factory(MagentoCategory::class)->create(),
+        $category = MagentoCategoryFactory::new()->create([
+            'parent_id' => $parent = MagentoCategoryFactory::new()->create(),
         ]);
 
         $this->assertNotEmpty($category, $parent);

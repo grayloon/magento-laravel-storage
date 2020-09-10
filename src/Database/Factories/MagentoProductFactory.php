@@ -1,19 +1,35 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Faker\Generator as Faker;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MagentoProduct::class, function (Faker $faker) {
-    return [
-        'id'         => rand(1, 10000),
-        'sku'        => $faker->ean8,
-        'name'       => $faker->bs,
-        'price'      => $faker->randomFloat(2, 1, 500),
-        'status'     => 1,
-        'visibility' => 1,
-        'type'       => 'simple',
-        'slug'       => $faker->slug,
-    ];
-});
+class MagentoProductFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = MagentoProduct::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'id'         => rand(1, 10000),
+            'sku'        => $this->faker->ean8,
+            'name'       => $this->faker->bs,
+            'price'      => $this->faker->randomFloat(2, 1, 500),
+            'status'     => 1,
+            'visibility' => 1,
+            'type'       => 'simple',
+            'slug'       => $this->faker->slug,
+        ];
+    }
+}

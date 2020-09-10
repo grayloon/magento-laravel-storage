@@ -42,7 +42,6 @@ class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
-        $this->loadFactoriesUsing($this->app, __DIR__.'/../src/Database/Factories');
         $this->loadMigrationsFrom(__DIR__.'/../src/Database/Migrations');
     }
 
