@@ -2,11 +2,14 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
-use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoProductCategory;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 
 class MagentoCategoryModelTest extends TestCase
 {
@@ -31,11 +34,11 @@ class MagentoCategoryModelTest extends TestCase
 
     public function test_can_add_custom_attributes_to_magento_category()
     {
-        $category = factory(MagentoCategory::class)->create();
+        $category = MagentoCategoryFactory::new()->create();
 
         $attribute = $category->customAttributes()->updateOrCreate([
             'attribute_type'    => 'foo',
-            'attribute_type_id' => factory(MagentoCustomAttributeType::class)->create(),
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
             'value'             => 'bar',
         ]);
 
@@ -48,11 +51,11 @@ class MagentoCategoryModelTest extends TestCase
 
     public function test_magento_category_can_get_single_product()
     {
-        factory(MagentoCategory::class)->create(); // create non-assigned category.
-        factory(MagentoProduct::class)->create(); // create non-assigned category.
+        MagentoCategoryFactory::new()->create(); // create non-assigned category.
+        MagentoProductFactory::new()->create(); // create non-assigned category.
 
-        $category = factory(MagentoCategory::class)->create();
-        factory(MagentoProductCategory::class)->create([
+        $category = MagentoCategoryFactory::new()->create();
+        MagentoProductCategoryFactory::new()->create([
             'magento_category_id' => $category->id,
         ]);
 

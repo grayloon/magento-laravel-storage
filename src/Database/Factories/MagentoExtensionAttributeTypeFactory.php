@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
 
 class MagentoExtensionAttributeTypeFactory extends Factory
 {

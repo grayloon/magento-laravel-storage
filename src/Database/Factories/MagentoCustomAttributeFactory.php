@@ -2,9 +2,10 @@
 
 namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
 
 class MagentoCustomAttributeFactory extends Factory
 {
@@ -27,7 +28,7 @@ class MagentoCustomAttributeFactory extends Factory
             'attribute_type_id'   => MagentoCustomAttributeTypeFactory::new()->create(),
             'value'               => $this->faker->catchPhrase,
             'attributable_type'   => $this->faker->randomElement([MagentoProduct::class, MagentoCategory::class]),
-            'attributable_id'     => fn (array $attribute) => factory($attribute['attributable_type']),
+            'attributable_id'     => 1,
         ];
     }
 }

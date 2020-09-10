@@ -2,25 +2,29 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
+use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 
 class MagentoCustomAttributeModelTest extends TestCase
 {
     public function test_can_create_magento_custom_attribute()
     {
-        $attribute = factory(MagentoCustomAttribute::class)->create();
+        $attribute = MagentoCustomAttributeFactory::new()->create();
 
         $this->assertNotEmpty($attribute);
     }
 
     public function test_can_create_magento_custom_attribute_poly_type_can_be_product()
     {
-        $attribute = factory(MagentoCustomAttribute::class)->create([
+        $attribute = MagentoCustomAttributeFactory::new()->create([
             'attributable_type'   => MagentoProduct::class,
-            'attributable_id'     => fn (array $attribute) => factory($attribute['attributable_type']),
+            'attributable_id'     => MagentoProductFactory::new()->create(),
         ]);
 
         $this->assertNotEmpty($attribute);
@@ -29,9 +33,9 @@ class MagentoCustomAttributeModelTest extends TestCase
 
     public function test_can_create_magento_custom_attribute_poly_type_can_be_category()
     {
-        $attribute = factory(MagentoCustomAttribute::class)->create([
+        $attribute = MagentoCustomAttributeFactory::new()->create([
             'attributable_type'   => MagentoCategory::class,
-            'attributable_id'     => fn (array $attribute) => factory($attribute['attributable_type']),
+            'attributable_id'     => MagentoCategoryFactory::new()->create(),
         ]);
 
         $this->assertNotEmpty($attribute);
@@ -40,8 +44,8 @@ class MagentoCustomAttributeModelTest extends TestCase
 
     public function test_custom_attribute_type_id_belongs_to_attribute_type_relationship()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create();
-        $attribute = factory(MagentoCustomAttribute::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create();
+        $attribute = MagentoCustomAttributeFactory::new()->create([
             'attribute_type' => $type->id,
         ]);
 

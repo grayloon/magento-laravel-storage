@@ -4,18 +4,20 @@ namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
 
 class MagentoProductMediaModelTest extends TestCase
 {
     public function test_can_create_media_record()
     {
-        $this->assertNotEmpty(factory(MagentoProductMedia::class)->create());
+        $this->assertNotEmpty(MagentoProductMediaFactory::new()->create());
     }
 
     public function test_magento_product_media_product_id_belongs_to_product()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $media = factory(MagentoProductMedia::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        $media = MagentoProductMediaFactory::new()->create([
             'product_id' => $product->id,
         ]);
 
@@ -27,7 +29,7 @@ class MagentoProductMediaModelTest extends TestCase
 
     public function test_types_column_is_castable()
     {
-        $media = factory(MagentoProductMedia::class)->create([
+        $media = MagentoProductMediaFactory::new()->create([
             'types' => [
                 'image',
                 'small_image',

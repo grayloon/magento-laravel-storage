@@ -4,20 +4,22 @@ namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductLink;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
 
 class MagentoProductLinksModelTest extends TestCase
 {
     public function test_can_create_magento_product_link()
     {
-        $link = factory(MagentoProductLink::class)->create();
+        $link = MagentoProductLinkFactory::new()->create();
 
         $this->assertNotEmpty($link);
     }
 
     public function test_magento_product_link_product_id_belongs_to_product()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $link = factory(MagentoProductLink::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        $link = MagentoProductLinkFactory::new()->create([
             'product_id' => $product->id,
         ]);
 
@@ -29,9 +31,9 @@ class MagentoProductLinksModelTest extends TestCase
 
     public function test_magento_product_link_related_product_id_belongs_to_product()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $related = factory(MagentoProduct::class)->create();
-        $link = factory(MagentoProductLink::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        $related = MagentoProductFactory::new()->create();
+        $link = MagentoProductLinkFactory::new()->create([
             'product_id' => $product->id,
             'related_product_id' => $related->id,
         ]);
