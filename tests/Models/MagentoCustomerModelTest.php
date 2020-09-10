@@ -2,7 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
-use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerAddressFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
 use Grayloon\MagentoStorage\Models\MagentoCustomer;
 use Grayloon\MagentoStorage\Models\MagentoCustomerAddress;
 use Illuminate\Support\Facades\Auth;
@@ -11,16 +13,16 @@ class MagentoCustomerModelTest extends TestCase
 {
     public function test_can_create_magento_customer()
     {
-        $customer = factory(MagentoCustomer::class)->create();
+        $customer = MagentoCustomerFactory::new()->create();
 
         $this->assertNotEmpty($customer);
     }
 
     public function test_can_get_custom_attributes_on_magento_customer()
     {
-        $customer = factory(MagentoCustomer::class)->create();
+        $customer = MagentoCustomerFactory::new()->create();
 
-        factory(MagentoCustomAttribute::class)->create([
+        MagentoCustomAttributeFactory::new()->create([
             'attributable_type'   => MagentoCustomer::class,
             'attributable_id'     => $customer->id,
         ]);
@@ -34,9 +36,9 @@ class MagentoCustomerModelTest extends TestCase
 
     public function test_can_update_instead_of_creating_row_custom_attributes_on_customer()
     {
-        $customer = factory(MagentoCustomer::class)->create();
+        $customer = MagentoCustomerFactory::new()->create();
 
-        factory(MagentoCustomAttribute::class)->create([
+        MagentoCustomAttributeFactory::new()->create([
             'attributable_type'   => MagentoCustomer::class,
             'attributable_id'     => $customer->id,
             'attribute_type'      => 'foo',
@@ -53,9 +55,9 @@ class MagentoCustomerModelTest extends TestCase
 
     public function test_magento_customer_has_many_addresses()
     {
-        $customer = factory(MagentoCustomer::class)->create();
+        $customer = MagentoCustomerFactory::new()->create();
 
-        factory(MagentoCustomerAddress::class, 5)->create([
+        MagentoCustomerAddressFactory::new()->count(5)->create([
             'customer_id' => $customer->id,
         ]);
 
@@ -65,7 +67,7 @@ class MagentoCustomerModelTest extends TestCase
 
     public function test_magento_customer_is_authenticatable()
     {
-        $customer = factory(MagentoCustomer::class)->create();
+        $customer = MagentoCustomerFactory::new()->create();
 
         $this->actingAs($customer);
 

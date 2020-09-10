@@ -1,12 +1,28 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Faker\Generator as Faker;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MagentoExtensionAttributeType::class, function (Faker $faker) {
-    return [
-        'type' => $faker->bs,
-    ];
-});
+class MagentoExtensionAttributeTypeFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = MagentoExtensionAttributeType::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'type' => $this->faker->bs,
+        ];
+    }
+}

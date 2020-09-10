@@ -18,12 +18,12 @@
     "require": {
         "php": "^7.4",
         "grayloon/laravel-magento-api": "dev-master",
-        "guzzlehttp/guzzle": "^6.0",
-        "illuminate/support": "^7.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "illuminate/support": "^8.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
-        "orchestra/testbench": "^5.3",
+        "orchestra/testbench": "^5.0|6.0",
         "phpunit/phpunit": "^9.0"
     },
     "autoload": {

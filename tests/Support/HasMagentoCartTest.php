@@ -2,7 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Models\MagentoCustomer;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
 use Grayloon\MagentoStorage\Support\HasMagentoCart;
 use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
@@ -23,14 +23,14 @@ class HasMagentoCartTest extends TestCase
 
     public function test_existing_cart_is_false_on_customer_without_quote_id()
     {
-        $this->actingAs(factory(MagentoCustomer::class)->create());
+        $this->actingAs(MagentoCustomerFactory::new()->create());
 
         $this->assertFalse((new FakeHasMagentoCart())->fakeExistingCart());
     }
 
     public function test_existing_cart_is_true_on_customer_with_quote_id()
     {
-        $this->actingAs(factory(MagentoCustomer::class)->create());
+        $this->actingAs(MagentoCustomerFactory::new()->create());
         $this->session(['cart_quote_id' => 'foo']);
 
         $this->assertTrue((new FakeHasMagentoCart())->fakeExistingCart());
@@ -60,14 +60,14 @@ class HasMagentoCartTest extends TestCase
 
     public function test_shopping_cart_items_is_null_on_customer_without_quote_id()
     {
-        $this->actingAs(factory(MagentoCustomer::class)->create());
+        $this->actingAs(MagentoCustomerFactory::new()->create());
 
         $this->assertNull((new FakeHasMagentoCart())->fakeShoppingCartItems());
     }
 
     public function test_shopping_cart_items_is_valid_on_customer_with_quote_id()
     {
-        $this->actingAs(factory(MagentoCustomer::class)->create());
+        $this->actingAs(MagentoCustomerFactory::new()->create());
         $this->session(['cart_quote_id' => 'foo']);
         config(['magento.store_code' => 'foo']);
 
@@ -97,7 +97,7 @@ class HasMagentoCartTest extends TestCase
 
     public function test_create_cart_can_get_quote_id_of_customer_cart()
     {
-        $this->actingAs(factory(MagentoCustomer::class)->create());
+        $this->actingAs(MagentoCustomerFactory::new()->create());
         $this->session(['customer_api_token' => 'FAKE_TOKEN']);
         config(['magento.store_code' => 'foo']);
 
@@ -144,7 +144,7 @@ class HasMagentoCartTest extends TestCase
 
     public function test_add_item_to_cart_can_add_item_as_signed_in_customer()
     {
-        $this->actingAs(factory(MagentoCustomer::class)->create());
+        $this->actingAs(MagentoCustomerFactory::new()->create());
         $this->session(['customer_api_token' => 'FAKE_TOKEN']);
         config(['magento.store_code' => 'foo']);
 

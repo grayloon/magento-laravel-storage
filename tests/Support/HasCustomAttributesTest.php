@@ -2,8 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Support\HasCustomAttributes;
 use Grayloon\MagentoStorage\Tests\TestCase;
@@ -28,7 +29,7 @@ class HasCustomAttributesTest extends TestCase
     public function test_resolves_existing_custom_attribute_type()
     {
         Queue::fake();
-        $existing = factory(MagentoCustomAttributeType::class)->create([
+        $existing = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
         ]);
 
@@ -42,7 +43,7 @@ class HasCustomAttributesTest extends TestCase
 
     public function test_resolves_existing_raw_value_from_empty_options()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
         ]);
 
@@ -53,7 +54,7 @@ class HasCustomAttributesTest extends TestCase
 
     public function test_resolves_correct_value_from_provided_options()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
             'options' => [
                 [
@@ -74,7 +75,7 @@ class HasCustomAttributesTest extends TestCase
 
     public function test_resolves_raw_value_from_option_not_supplied_in_options()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
             'options' => [
                 [
@@ -95,7 +96,7 @@ class HasCustomAttributesTest extends TestCase
 
     public function test_updates_attribute_value_based_on_options()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
             'options' => [
                 [
@@ -109,7 +110,7 @@ class HasCustomAttributesTest extends TestCase
             ],
         ]);
 
-        $attribute = factory(MagentoCustomAttribute::class)->create([
+        $attribute = MagentoCustomAttributeFactory::new()->create([
             'attribute_type_id' => $type->id,
             'value' => '1',
         ]);
@@ -121,7 +122,7 @@ class HasCustomAttributesTest extends TestCase
 
     public function test_updates_multiple_attribute_value_based_on_options()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
             'options' => [
                 [
@@ -135,7 +136,7 @@ class HasCustomAttributesTest extends TestCase
             ],
         ]);
 
-        $attributes = factory(MagentoCustomAttribute::class, 10)->create([
+        $attributes = MagentoCustomAttributeFactory::new()->count(10)->create([
             'attribute_type_id' => $type->id,
             'value' => '1',
         ]);
@@ -147,7 +148,7 @@ class HasCustomAttributesTest extends TestCase
 
     public function test_missing_option_keeps_raw_attribute_value()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
             'options' => [
                 [
@@ -161,7 +162,7 @@ class HasCustomAttributesTest extends TestCase
             ],
         ]);
 
-        $attribute = factory(MagentoCustomAttribute::class)->create([
+        $attribute = MagentoCustomAttributeFactory::new()->create([
             'attribute_type_id' => $type->id,
             'value' => 'Unknown',
         ]);
@@ -173,12 +174,12 @@ class HasCustomAttributesTest extends TestCase
 
     public function test_raw_attribute_value_is_resolvable()
     {
-        $type = factory(MagentoCustomAttributeType::class)->create([
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
             'options' => [],
         ]);
 
-        $attribute = factory(MagentoCustomAttribute::class)->create([
+        $attribute = MagentoCustomAttributeFactory::new()->create([
             'attribute_type_id' => $type->id,
             'value' => null,
         ]);

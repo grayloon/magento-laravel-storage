@@ -2,28 +2,30 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductCategory;
-use Grayloon\MagentoStorage\Models\MagentoProductLink;
-use Grayloon\MagentoStorage\Models\MagentoProductMedia;
 
 class MagentoProductModelTest extends TestCase
 {
     public function test_can_create_magento_product()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
         $this->assertNotEmpty($product);
     }
 
     public function test_can_get_custom_attributes_on_magento_product()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
-        factory(MagentoCustomAttribute::class)->create([
+        MagentoCustomAttributeFactory::new()->create([
             'attributable_type'   => MagentoProduct::class,
             'attributable_id'     => $product->id,
         ]);
@@ -37,11 +39,11 @@ class MagentoProductModelTest extends TestCase
 
     public function test_can_add_custom_attributes_to_magento_product()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
         $attribute = $product->customAttributes()->updateOrCreate([
             'attribute_type'    => 'foo',
-            'attribute_type_id' => factory(MagentoCustomAttributeType::class)->create(),
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
             'value'             => 'bar',
         ]);
 
@@ -54,9 +56,9 @@ class MagentoProductModelTest extends TestCase
 
     public function test_can_update_instead_of_creating_row_custom_attributes()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
-        factory(MagentoCustomAttribute::class)->create([
+        MagentoCustomAttributeFactory::new()->create([
             'attributable_type'   => MagentoProduct::class,
             'attributable_id'     => $product->id,
             'attribute_type'      => 'foo',
@@ -73,9 +75,9 @@ class MagentoProductModelTest extends TestCase
 
     public function test_magento_product_can_get_single_category()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
-        $category = factory(MagentoProductCategory::class)->create([
+        $category = MagentoProductCategoryFactory::new()->create([
             'magento_product_id' => $product->id,
         ]);
 
@@ -88,9 +90,9 @@ class MagentoProductModelTest extends TestCase
 
     public function test_magento_product_can_get_categories()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
-        factory(MagentoProductCategory::class, 10)->create([
+        MagentoProductCategoryFactory::new()->count(10)->create([
             'magento_product_id' => $product->id,
         ]);
 
@@ -101,9 +103,9 @@ class MagentoProductModelTest extends TestCase
 
     public function test_magento_product_can_pass_through_categories()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $category = factory(MagentoCategory::class)->create();
-        $passThrough = factory(MagentoProductCategory::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        $category = MagentoCategoryFactory::new()->create();
+        $passThrough = MagentoProductCategoryFactory::new()->create([
             'id' => 1000,
             'magento_product_id' => $product->id,
             'magento_category_id' => $category->id,
@@ -116,9 +118,9 @@ class MagentoProductModelTest extends TestCase
 
     public function test_custom_attribute_value_helper_returns_value_of_custom_attribute()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
-        factory(MagentoCustomAttribute::class)->create([
+        MagentoCustomAttributeFactory::new()->create([
             'attributable_type'   => MagentoProduct::class,
             'attributable_id'     => $product->id,
             'attribute_type'      => 'foo',
@@ -133,7 +135,7 @@ class MagentoProductModelTest extends TestCase
 
     public function test_custom_attribute_value_helper_returns_null_of_invalid_custom_attribute()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
         $product = $product->with('customAttributes')->first();
 
@@ -143,9 +145,9 @@ class MagentoProductModelTest extends TestCase
 
     public function test_magento_product_can_have_related_products()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $related = factory(MagentoProduct::class)->create();
-        $link = factory(MagentoProductLink::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        $related = MagentoProductFactory::new()->create();
+        $link = MagentoProductLinkFactory::new()->create([
             'product_id' => $product->id,
             'related_product_id' => $related->id,
         ]);
@@ -158,8 +160,8 @@ class MagentoProductModelTest extends TestCase
 
     public function test_magento_product_can_have_many_related_products()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $link = factory(MagentoProductLink::class, 5)->create([
+        $product = MagentoProductFactory::new()->create();
+        $link = MagentoProductLinkFactory::new()->count(5)->create([
             'product_id' => $product->id,
         ]);
 
@@ -170,15 +172,15 @@ class MagentoProductModelTest extends TestCase
 
     public function test_magento_related_products_sorts_by_position()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $first = factory(MagentoProduct::class)->create();
-        $second = factory(MagentoProduct::class)->create();
-        factory(MagentoProductLink::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        $first = MagentoProductFactory::new()->create();
+        $second = MagentoProductFactory::new()->create();
+        MagentoProductLinkFactory::new()->create([
             'product_id' => $product->id,
             'related_product_id' => $second->id,
             'position' => 2,
         ]);
-        factory(MagentoProductLink::class)->create([
+        MagentoProductLinkFactory::new()->create([
             'product_id' => $product->id,
             'related_product_id' => $first->id,
             'position' => 1,
@@ -190,8 +192,8 @@ class MagentoProductModelTest extends TestCase
 
     public function test_magento_product_can_have_many_images()
     {
-        $product = factory(MagentoProduct::class)->create();
-        factory(MagentoProductMedia::class, 5)->create([
+        $product = MagentoProductFactory::new()->create();
+        MagentoProductMediaFactory::new()->count(5)->create([
             'product_id' => $product->id,
         ]);
 

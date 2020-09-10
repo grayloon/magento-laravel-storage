@@ -2,8 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
 use Grayloon\MagentoStorage\Jobs\WaitForLinkedProductSku;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductLink;
 use Grayloon\MagentoStorage\Support\HasProductLinks;
 use Grayloon\MagentoStorage\Tests\TestCase;
@@ -13,10 +14,10 @@ class HasProductLinkTest extends TestCase
 {
     public function test_creates_product_links()
     {
-        $product = factory(MagentoProduct::class)->create([
+        $product = MagentoProductFactory::new()->create([
             'id' => 5,
         ]);
-        $link = factory(MagentoProduct::class)->create([
+        $link = MagentoProductFactory::new()->create([
             'id' => 10,
         ]);
         $links = [
@@ -40,7 +41,7 @@ class HasProductLinkTest extends TestCase
     {
         Queue::fake();
 
-        $product = factory(MagentoProduct::class)->create([
+        $product = MagentoProductFactory::new()->create([
             'id' => 5,
         ]);
         $links = [
@@ -63,7 +64,7 @@ class HasProductLinkTest extends TestCase
 
     public function test_updates_product_links()
     {
-        $link = factory(MagentoProductLink::class)->create();
+        $link = MagentoProductLinkFactory::new()->create();
         $links = [
             [
                 'sku' => $link->product->sku,
@@ -84,7 +85,7 @@ class HasProductLinkTest extends TestCase
 
     public function test_can_process_empty_links_response()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
         (new FakeProductLinksSupportingTest)->exposedSyncProductLinks($links = [], $product);
 

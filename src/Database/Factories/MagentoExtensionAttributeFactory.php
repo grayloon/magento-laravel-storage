@@ -1,16 +1,30 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Faker\Generator as Faker;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
-use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MagentoExtensionAttribute::class, function (Faker $faker) {
-    return [
-        'magento_product_id'            => factory(MagentoProduct::class)->create(),
-        'magento_ext_attribute_type_id' => factory(MagentoExtensionAttributeType::class)->create(),
-        'attribute'                     => [$faker->catchPhrase],
-    ];
-});
+class MagentoExtensionAttributeFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = MagentoExtensionAttribute::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'magento_product_id'            => MagentoProductFactory::new()->create(),
+            'magento_ext_attribute_type_id' => MagentoExtensionAttributeTypeFactory::new()->create(),
+            'attribute'                     => [$this->faker->catchPhrase],
+        ];
+    }
+}

@@ -3,8 +3,8 @@
 namespace Grayloon\MagentoStorage\Tests\Jobs;
 
 use Exception;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Jobs\WaitForLinkedProductSku;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductLink;
 use Grayloon\MagentoStorage\Tests\TestCase;
 
@@ -12,8 +12,8 @@ class WaitForLinkedProductSkuTest extends TestCase
 {
     public function test_advances_to_link_creation_on_related_existence()
     {
-        $product = factory(MagentoProduct::class)->create();
-        $related = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
+        $related = MagentoProductFactory::new()->create();
 
         $response = [
             'sku' => $product->sku,
@@ -31,7 +31,7 @@ class WaitForLinkedProductSkuTest extends TestCase
     public function test_fails_when_try_limit_maxed_and_related_doesnt_exist()
     {
         $this->expectException(Exception::class);
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
         $response = [
             'sku' => $product->sku,

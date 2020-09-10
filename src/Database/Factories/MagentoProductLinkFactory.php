@@ -1,16 +1,31 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Faker\Generator as Faker;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductLink;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MagentoProductLink::class, function (Faker $faker) {
-    return [
-        'product_id' => factory(MagentoProduct::class)->create(),
-        'related_product_id' => factory(MagentoProduct::class)->create(),
-        'link_type' => $faker->randomElement(['related', 'upsell']),
-        'position' => 1,
-    ];
-});
+class MagentoProductLinkFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = MagentoProductLink::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'product_id' => MagentoProductFactory::new()->create(),
+            'related_product_id' => MagentoProductFactory::new()->create(),
+            'link_type' => $this->faker->randomElement(['related', 'upsell']),
+            'position' => 1,
+        ];
+    }
+}

@@ -2,8 +2,8 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Models\MagentoProductCategory;
 use Grayloon\MagentoStorage\Support\HasProductCategories;
 use Grayloon\MagentoStorage\Tests\TestCase;
@@ -12,10 +12,10 @@ class HasProductCategoriesTest extends TestCase
 {
     public function test_creates_product_categories()
     {
-        $product = factory(MagentoProduct::class)->create([
+        $product = MagentoProductFactory::new()->create([
             'id' => 10,
         ]);
-        $category = factory(MagentoCategory::class)->create([
+        $category = MagentoCategoryFactory::new()->create([
             'id' => 20,
         ]);
 
@@ -28,7 +28,7 @@ class HasProductCategoriesTest extends TestCase
 
     public function test_product_categories_can_receive_empty_result()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
         (new FakeSupportingProductCategoriesClass)->exposedSyncProductCategories($categoryIds = [], $product);
 
         $this->assertEquals(0, MagentoProductCategory::count());

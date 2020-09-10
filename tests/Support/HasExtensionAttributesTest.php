@@ -2,9 +2,10 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoExtensionAttributeTypeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Support\HasExtensionAttributes;
 use Grayloon\MagentoStorage\Tests\TestCase;
 
@@ -12,7 +13,7 @@ class HasExtensionAttributesTest extends TestCase
 {
     public function test_resolves_new_extension_attribute_type()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
         (new FakeSupportingExtensionClass)->exposedSyncExtensionAttributes(['foo' => 'bar'], $product);
 
@@ -24,8 +25,8 @@ class HasExtensionAttributesTest extends TestCase
 
     public function test_resolves_existing_extension_attribute_type()
     {
-        $product = factory(MagentoProduct::class)->create();
-        factory(MagentoExtensionAttributeType::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        MagentoExtensionAttributeTypeFactory::new()->create([
             'type' => 'foo',
         ]);
 
