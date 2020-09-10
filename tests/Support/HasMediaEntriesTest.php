@@ -2,12 +2,14 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Jobs\DownloadMagentoProductImage;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductMedia;
-use Grayloon\MagentoStorage\Support\HasMediaEntries;
-use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Support\HasMediaEntries;
+use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Grayloon\MagentoStorage\Jobs\DownloadMagentoProductImage;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
 
 class HasMediaEntriesTest extends TestCase
 {
@@ -15,7 +17,7 @@ class HasMediaEntriesTest extends TestCase
     {
         Queue::fake();
 
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
         $images = [
             [
                 'id' => 1,
@@ -48,7 +50,7 @@ class HasMediaEntriesTest extends TestCase
     {
         Queue::fake();
 
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
         $images = [
             [
                 'id' => 1,
@@ -77,8 +79,8 @@ class HasMediaEntriesTest extends TestCase
     {
         Queue::fake();
 
-        $product = factory(MagentoProduct::class)->create();
-        $image = factory(MagentoProductMedia::class)->create([
+        $product = MagentoProductFactory::new()->create();
+        $image = MagentoProductMediaFactory::new()->create([
             'id' => 1,
             'product_id' => $product->id,
             'label' => null,
@@ -107,7 +109,7 @@ class HasMediaEntriesTest extends TestCase
 
     public function test_product_images_can_receive_empty_images_result()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
         (new FakeSupportingMediaEntriesClass)->exposedDownloadProductImages($images = [], $product);
 
         $this->assertEquals(0, MagentoProductMedia::count());

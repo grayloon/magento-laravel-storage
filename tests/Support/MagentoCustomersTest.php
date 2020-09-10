@@ -2,13 +2,14 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Models\MagentoCustomer;
-use Grayloon\MagentoStorage\Support\MagentoCustomers;
-use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Grayloon\MagentoStorage\Models\MagentoCustomer;
+use Grayloon\MagentoStorage\Support\MagentoCustomers;
+use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 
 class MagentoCustomersTest extends TestCase
 {
@@ -29,7 +30,7 @@ class MagentoCustomersTest extends TestCase
 
     public function test_can_create_magento_customer()
     {
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'rewards_member']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'rewards_member']);
 
         $customers = [
             [

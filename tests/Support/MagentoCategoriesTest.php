@@ -2,14 +2,15 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Support\MagentoCategories;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use function GuzzleHttp\Promise\queue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use function GuzzleHttp\Promise\queue;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Grayloon\MagentoStorage\Models\MagentoCategory;
+use Grayloon\MagentoStorage\Support\MagentoCategories;
+use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 
 class MagentoCategoriesTest extends TestCase
 {
@@ -63,9 +64,9 @@ class MagentoCategoriesTest extends TestCase
             ],
         ];
 
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'path']);
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'url_path']);
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'children_count']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'path']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'url_path']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'children_count']);
 
         (new MagentoCategories())->updateCategories($categories);
 
@@ -83,8 +84,8 @@ class MagentoCategoriesTest extends TestCase
 
     public function test_root_category_has_nullable_slug()
     {
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'path']);
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'children_count']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'path']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'children_count']);
 
         $categories = [
             [
@@ -125,8 +126,8 @@ class MagentoCategoriesTest extends TestCase
     {
         Queue::fake();
 
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'path']);
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'children_count']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'path']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'children_count']);
 
         $categories = [
             [
@@ -172,8 +173,8 @@ class MagentoCategoriesTest extends TestCase
     {
         Queue::fake();
 
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'path']);
-        factory(MagentoCustomAttributeType::class)->create(['name' => 'children_count']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'path']);
+        MagentoCustomAttributeTypeFactory::new()->create(['name' => 'children_count']);
 
         $categories = [
             [

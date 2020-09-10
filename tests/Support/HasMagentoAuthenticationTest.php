@@ -2,6 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
 use Grayloon\MagentoStorage\Models\MagentoCustomer;
 use Grayloon\MagentoStorage\Support\HasMagentoAuthentication;
 use Grayloon\MagentoStorage\Tests\TestCase;
@@ -10,7 +11,7 @@ class HasMagentoAuthenticationTest extends TestCase
 {
     public function test_customer_is_signed_in_is_true()
     {
-        $this->actingAs(factory(MagentoCustomer::class)->create());
+        $this->actingAs(MagentoCustomerFactory::new()->create());
 
         $this->assertTrue((new FakeHasMagentoAuthentication())->fakeCustomerIsSignedIn());
     }

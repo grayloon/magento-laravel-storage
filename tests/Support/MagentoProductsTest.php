@@ -2,17 +2,19 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
-use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductMedia;
-use Grayloon\MagentoStorage\Support\MagentoProducts;
-use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Models\MagentoCategory;
+use Grayloon\MagentoStorage\Support\MagentoProducts;
+use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
+use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
+use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
 
 class MagentoProductsTest extends TestCase
 {
@@ -34,7 +36,7 @@ class MagentoProductsTest extends TestCase
     public function test_can_create_product()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
+        MagentoCategoryFactory::new()->create();
 
         $product = $this->fakeProduct();
 
@@ -52,7 +54,7 @@ class MagentoProductsTest extends TestCase
     public function test_missing_stock_item_resolves_quantity()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
+        MagentoCategoryFactory::new()->create();
 
         $product = $this->fakeProduct([
             'extension_attributes' => [
@@ -72,7 +74,7 @@ class MagentoProductsTest extends TestCase
     public function test_can_add_extension_attributes()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
+        MagentoCategoryFactory::new()->create();
 
         $product = $this->fakeProduct();
 
@@ -93,7 +95,7 @@ class MagentoProductsTest extends TestCase
     public function test_can_add_custom_attributes()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
+        MagentoCategoryFactory::new()->create();
 
         $product = $this->fakeProduct();
 
@@ -114,8 +116,8 @@ class MagentoProductsTest extends TestCase
     public function test_can_add_product_links()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
-        factory(MagentoProduct::class)->create([
+        MagentoCategoryFactory::new()->create();
+        MagentoProductFactory::new()->create([
             'sku' => 'bar',
         ]);
 
@@ -134,7 +136,7 @@ class MagentoProductsTest extends TestCase
     public function test_can_add_product_images()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
+        MagentoCategoryFactory::new()->create();
 
         $product = $this->fakeProduct();
 
@@ -153,7 +155,7 @@ class MagentoProductsTest extends TestCase
     public function test_can_add_applied_rule_category_ids()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
+        MagentoCategoryFactory::new()->create();
 
         $product = $this->fakeProduct();
 
@@ -170,7 +172,7 @@ class MagentoProductsTest extends TestCase
     public function test_can_apply_rule_apply_slug()
     {
         Queue::fake();
-        factory(MagentoCategory::class)->create();
+        MagentoCategoryFactory::new()->create();
 
         $product = $this->fakeProduct();
 

@@ -2,10 +2,11 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
+use Illuminate\Support\Facades\Http;
+use Grayloon\MagentoStorage\Tests\TestCase;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Support\MagentoSourceItems;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Illuminate\Support\Facades\Http;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 
 class MagentoSourceItemsTest extends TestCase
 {
@@ -26,7 +27,7 @@ class MagentoSourceItemsTest extends TestCase
 
     public function test_can_update_product_quantity()
     {
-        $product = factory(MagentoProduct::class)->create();
+        $product = MagentoProductFactory::new()->create();
 
         $response = [
             [
