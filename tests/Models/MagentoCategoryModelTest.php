@@ -2,14 +2,12 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Models\MagentoProductCategory;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Models\MagentoCategory;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
 
 class MagentoCategoryModelTest extends TestCase
 {

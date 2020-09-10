@@ -2,10 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
-use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
-use Grayloon\MagentoStorage\Models\MagentoCustomerAddress;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerAddressFactory;
+use Grayloon\MagentoStorage\Models\MagentoCustomerAddress;
 
 class MagentoCustomerAddressModelTest extends TestCase
 {

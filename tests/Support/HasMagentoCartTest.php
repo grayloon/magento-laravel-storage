@@ -2,11 +2,10 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Illuminate\Support\Facades\Http;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoCustomer;
-use Grayloon\MagentoStorage\Support\HasMagentoCart;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
+use Grayloon\MagentoStorage\Support\HasMagentoCart;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Illuminate\Support\Facades\Http;
 
 class HasMagentoCartTest extends TestCase
 {

@@ -2,14 +2,13 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Illuminate\Support\Facades\Queue;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Support\HasProductLinks;
-use Grayloon\MagentoStorage\Models\MagentoProductLink;
-use Grayloon\MagentoStorage\Jobs\WaitForLinkedProductSku;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
+use Grayloon\MagentoStorage\Jobs\WaitForLinkedProductSku;
+use Grayloon\MagentoStorage\Models\MagentoProductLink;
+use Grayloon\MagentoStorage\Support\HasProductLinks;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Illuminate\Support\Facades\Queue;
 
 class HasProductLinkTest extends TestCase
 {

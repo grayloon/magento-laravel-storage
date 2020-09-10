@@ -2,15 +2,14 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Queue;
-use function GuzzleHttp\Promise\queue;
-use Grayloon\MagentoStorage\Tests\TestCase;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Support\MagentoCategories;
-use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use function GuzzleHttp\Promise\queue;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 
 class MagentoCategoriesTest extends TestCase
 {

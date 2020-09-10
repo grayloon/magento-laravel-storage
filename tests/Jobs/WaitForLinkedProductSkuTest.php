@@ -3,11 +3,10 @@
 namespace Grayloon\MagentoStorage\Tests\Jobs;
 
 use Exception;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductLink;
-use Grayloon\MagentoStorage\Jobs\WaitForLinkedProductSku;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Jobs\WaitForLinkedProductSku;
+use Grayloon\MagentoStorage\Models\MagentoProductLink;
+use Grayloon\MagentoStorage\Tests\TestCase;
 
 class WaitForLinkedProductSkuTest extends TestCase
 {

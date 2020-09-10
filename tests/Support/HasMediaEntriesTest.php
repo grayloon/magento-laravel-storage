@@ -2,14 +2,13 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Illuminate\Support\Facades\Queue;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Support\HasMediaEntries;
-use Grayloon\MagentoStorage\Models\MagentoProductMedia;
-use Grayloon\MagentoStorage\Jobs\DownloadMagentoProductImage;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
+use Grayloon\MagentoStorage\Jobs\DownloadMagentoProductImage;
+use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Grayloon\MagentoStorage\Support\HasMediaEntries;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Illuminate\Support\Facades\Queue;
 
 class HasMediaEntriesTest extends TestCase
 {

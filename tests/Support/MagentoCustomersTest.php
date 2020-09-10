@@ -2,14 +2,14 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Queue;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoCustomer;
-use Grayloon\MagentoStorage\Support\MagentoCustomers;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Models\MagentoCustomer;
+use Grayloon\MagentoStorage\Support\MagentoCustomers;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 
 class MagentoCustomersTest extends TestCase
 {

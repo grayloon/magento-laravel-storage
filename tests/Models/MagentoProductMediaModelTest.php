@@ -2,10 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductMedia;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
 
 class MagentoProductMediaModelTest extends TestCase
 {

@@ -2,8 +2,8 @@
 
 namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MagentoProductMediaFactory extends Factory
 {

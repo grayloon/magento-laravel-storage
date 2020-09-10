@@ -3,7 +3,6 @@
 namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoExtensionAttributeTypeFactory;
-use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
 
 class MagentoExtensionAttributeTypeModelTest extends TestCase
 {

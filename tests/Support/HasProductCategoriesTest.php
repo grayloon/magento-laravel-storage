@@ -2,13 +2,11 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Support\HasProductCategories;
-use Grayloon\MagentoStorage\Models\MagentoProductCategory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Models\MagentoProductCategory;
+use Grayloon\MagentoStorage\Support\HasProductCategories;
+use Grayloon\MagentoStorage\Tests\TestCase;
 
 class HasProductCategoriesTest extends TestCase
 {

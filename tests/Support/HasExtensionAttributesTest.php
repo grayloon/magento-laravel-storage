@@ -2,13 +2,12 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Support\HasExtensionAttributes;
+use Grayloon\MagentoStorage\Database\Factories\MagentoExtensionAttributeTypeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoExtensionAttributeTypeFactory;
+use Grayloon\MagentoStorage\Support\HasExtensionAttributes;
+use Grayloon\MagentoStorage\Tests\TestCase;
 
 class HasExtensionAttributesTest extends TestCase
 {

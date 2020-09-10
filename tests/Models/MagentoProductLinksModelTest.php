@@ -2,10 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductLink;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
 
 class MagentoProductLinksModelTest extends TestCase
 {

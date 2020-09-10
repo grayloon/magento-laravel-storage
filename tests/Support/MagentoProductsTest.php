@@ -2,19 +2,18 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
+use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
+use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Grayloon\MagentoStorage\Support\MagentoProducts;
+use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
-use Grayloon\MagentoStorage\Tests\TestCase;
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Support\MagentoProducts;
-use Grayloon\MagentoStorage\Models\MagentoProductMedia;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
-use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
-use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
-use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
 
 class MagentoProductsTest extends TestCase
 {

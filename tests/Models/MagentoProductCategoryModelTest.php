@@ -3,7 +3,6 @@
 namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
-use Grayloon\MagentoStorage\Models\MagentoProductCategory;
 
 class MagentoProductCategoryModelTest extends TestCase
 {
