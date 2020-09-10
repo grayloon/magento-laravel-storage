@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MagentoCategory extends Model
 {
     use HasFactory;
-    
+
     /**
      * The attributes that aren't mass assignable.
      *
