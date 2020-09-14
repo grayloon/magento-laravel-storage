@@ -2,9 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Support;
 
-use Illuminate\Support\Str;
 use Grayloon\Magento\Magento;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 trait HasMagentoCart
 {
@@ -54,7 +54,7 @@ trait HasMagentoCart
     }
 
     /**
-     * Sometimes Magento will include quotes in their strings. 
+     * Sometimes Magento will include quotes in their strings.
      * If this is the case, we need to remove them to prevent double quoting strings.
      *
      * @param  string  $text
