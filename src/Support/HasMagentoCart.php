@@ -62,7 +62,7 @@ trait HasMagentoCart
      */
     protected function stripStringQuotes($text)
     {
-        return Str::of($text)->replace('"', '');
+        return Str::of($text)->replace('"', '')->__toString();
     }
 
     /**

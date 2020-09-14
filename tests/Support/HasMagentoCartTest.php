@@ -211,6 +211,7 @@ class HasMagentoCartTest extends TestCase
 
         (new FakeHasMagentoCart())->fakeCreateCart();
 
+
         $this->assertEquals('FAKE_TOKEN_IN_QUOTES', session('g_cart'));
     }
 }
