@@ -94,6 +94,22 @@ trait HasMagentoCart
         return $response;
     }
 
+    /**
+     * Get the Cart Totals for the specified customer or guest cart.
+     *
+     * @return array
+     */
+    protected function cartTotals()
+    {
+        if (! $this->existingCart()) {
+            return;
+        }
+
+        return $this->customerIsSignedIn()
+            ? $this->magentoCustomerToken()->api('cartTotals')->mine()->json()
+            : (new Magento())->api('guestCarts')->totals(session('g_cart'))->json();
+    }
+
     private function magentoCustomerToken()
     {
         $magento = new Magento();

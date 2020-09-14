@@ -160,6 +160,48 @@ class HasMagentoCartTest extends TestCase
         $this->assertEquals(2, session('ttl_qty_count'));
         $this->assertNotNull(session('customer_api_token'));
     }
+
+    public function test_can_get_cart_total_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/totals' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeCartTotals());
+    }
+
+    public function test_can_get_cart_total_as_signed_in_customer()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine/totals' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeCartTotals());
+    }
+
+    public function test_cart_total_returns_null_as_guest_without_cart()
+    {
+        Http::fake([
+            '*/guest-carts/FAKE_CART/totals' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertNull((new FakeHasMagentoCart())->fakeCartTotals());
+    }
 }
 
 class FakeHasMagentoCart
@@ -184,5 +226,10 @@ class FakeHasMagentoCart
     public function fakeAddItemToCart($sku, $qty)
     {
         return $this->addItemToCart($sku, $qty);
+    }
+
+    public function fakeCartTotals()
+    {
+        return $this->cartTotals();
     }
 }
