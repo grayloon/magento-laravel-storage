@@ -202,6 +202,17 @@ class HasMagentoCartTest extends TestCase
 
         $this->assertNull((new FakeHasMagentoCart())->fakeCartTotals());
     }
+
+    public function test_create_cart_sanitizes_api_token_with_quotes_in_response()
+    {
+        Http::fake([
+            '*/guest-carts' => Http::response('"FAKE_TOKEN_IN_QUOTES"', 200),
+        ]);
+
+        (new FakeHasMagentoCart())->fakeCreateCart();
+
+        $this->assertEquals('FAKE_TOKEN_IN_QUOTES', session('g_cart'));
+    }
 }
 
 class FakeHasMagentoCart

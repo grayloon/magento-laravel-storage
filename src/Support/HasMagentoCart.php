@@ -2,6 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Support;
 
+use Illuminate\Support\Str;
 use Grayloon\Magento\Magento;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,9 +48,21 @@ trait HasMagentoCart
     {
         $this->customerIsSignedIn()
             ? session(['cart_quote_id' => $this->magentoCustomerToken()->api('carts')->mine()->json()['id']])
-            : session(['g_cart' => (new Magento())->api('guestCarts')->create()->body()]);
+            : session(['g_cart' => $this->stripStringQuotes((new Magento())->api('guestCarts')->create()->body())]);
 
         return $this;
+    }
+
+    /**
+     * Sometimes Magento will include quotes in their strings. 
+     * If this is the case, we need to remove them to prevent double quoting strings.
+     *
+     * @param  string  $text
+     * @return string
+     */
+    protected function stripStringQuotes($text)
+    {
+        return Str::of($text)->replace('"', '');
     }
 
     /**
