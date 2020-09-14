@@ -2,10 +2,11 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
-use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
-use Grayloon\MagentoStorage\Support\HasMagentoCart;
-use Grayloon\MagentoStorage\Tests\TestCase;
+use Illuminate\Support\Stringable;
 use Illuminate\Support\Facades\Http;
+use Grayloon\MagentoStorage\Tests\TestCase;
+use Grayloon\MagentoStorage\Support\HasMagentoCart;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
 
 class HasMagentoCartTest extends TestCase
 {
@@ -211,6 +212,7 @@ class HasMagentoCartTest extends TestCase
 
         (new FakeHasMagentoCart())->fakeCreateCart();
 
+        $this->assertNotInstanceOf(Stringable::class, session('g_cart'));
         $this->assertEquals('FAKE_TOKEN_IN_QUOTES', session('g_cart'));
     }
 }
