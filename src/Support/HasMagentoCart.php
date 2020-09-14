@@ -45,13 +45,9 @@ trait HasMagentoCart
      */
     protected function createCart()
     {
-        if ($this->customerIsSignedIn()) {
-            $magento = new Magento();
-            $magento->token = session('customer_api_token');
-            session(['cart_quote_id' => $magento->api('carts')->mine()->json()['id']]);
-        } else {
-            session(['g_cart' => (new Magento())->api('guestCarts')->create()->body()]);
-        }
+        $this->customerIsSignedIn()
+            ? session(['cart_quote_id' => $this->magentoCustomerToken()->api('carts')->mine()->json()['id']])
+            : session(['g_cart' => (new Magento())->api('guestCarts')->create()->body()]);
 
         return $this;
     }
@@ -73,10 +69,7 @@ trait HasMagentoCart
      */
     protected function getCustomerCart()
     {
-        $magento = new Magento();
-        $magento->token = session('customer_api_token');
-
-        return $magento->api('cartItems')->mine()->json();
+        return $this->magentoCustomerToken()->api('cartItems')->mine()->json();
     }
 
     /**
@@ -86,13 +79,9 @@ trait HasMagentoCart
      */
     protected function addItemToCart($sku, $quantity)
     {
-        if ($this->customerIsSignedIn()) {
-            $magento = new Magento();
-            $magento->token = session('customer_api_token');
-            $response = $magento->api('cartItems')->addItem(session('cart_quote_id'), $sku, $quantity)->json();
-        } else {
-            $response = (new Magento())->api('guestCarts')->addItem(session('g_cart'), $sku, $quantity)->json();
-        }
+        $response = $this->customerIsSignedIn()
+            ? $this->magentoCustomerToken()->api('cartItems')->addItem(session('cart_quote_id'), $sku, $quantity)->json()
+            : (new Magento())->api('guestCarts')->addItem(session('g_cart'), $sku, $quantity)->json();
 
         if (isset($response['message']) && $response['message'] === 'The requested qty is not available') {
             return;
@@ -103,5 +92,13 @@ trait HasMagentoCart
             : session(['ttl_qty_count' => $quantity]);
 
         return $response;
+    }
+
+    private function magentoCustomerToken()
+    {
+        $magento = new Magento();
+        $magento->token = session('customer_api_token');
+
+        return $magento;
     }
 }
