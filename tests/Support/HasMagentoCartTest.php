@@ -215,6 +215,46 @@ class HasMagentoCartTest extends TestCase
         $this->assertNotInstanceOf(Stringable::class, session('g_cart'));
         $this->assertEquals('FAKE_TOKEN_IN_QUOTES', session('g_cart'));
     }
+
+    public function test_estimate_shipping_method_can_estimate_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/estimate-shipping-methods' => Http::response([
+                0 => [
+                    'amount' => 4,
+                ],
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeEstimateShippingMethod());
+    }
+
+    public function test_estimate_shipping_method_can_returns_empty_on_guest_without_cart()
+    {
+        $this->assertNull((new FakeHasMagentoCart())->fakeEstimateShippingMethod());
+    }
+
+    public function test_estimate_shipping_method_can_pass_address_attributes_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/estimate-shipping-methods' => Http::response([
+                0 => [
+                    'amount' => 4,
+                ],
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeEstimateShippingMethod([
+            'region_id' => 1,
+            'region' => 'Indiana',
+            'country_id' => 'US',
+            'postcode' => '*',
+        ]));
+    }
 }
 
 class FakeHasMagentoCart
@@ -244,5 +284,10 @@ class FakeHasMagentoCart
     public function fakeCartTotals()
     {
         return $this->cartTotals();
+    }
+
+    public function fakeEstimateShippingMethod($addressAttributes = [])
+    {
+        return $this->estimateShippingMethod($addressAttributes = []);
     }
 }

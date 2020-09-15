@@ -123,6 +123,17 @@ trait HasMagentoCart
             : (new Magento())->api('guestCarts')->totals(session('g_cart'))->json();
     }
 
+    protected function estimateShippingMethod($addressAttributes = [])
+    {
+        if (! $this->existingCart()) {
+            return;
+        }
+
+        return (new Magento())->api('guestCarts')->estimateShippingMethods(session('g_cart'), [
+            'address' => $addressAttributes,
+        ])->json();
+    }
+
     private function magentoCustomerToken()
     {
         $magento = new Magento();
