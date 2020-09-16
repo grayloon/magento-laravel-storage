@@ -134,6 +134,15 @@ trait HasMagentoCart
         ])->json();
     }
 
+    protected function updateTotalsInformation($attributes = [])
+    {
+        if (! $this->existingCart()) {
+            return;
+        }
+
+        return (new Magento())->api('guestCarts')->totalsInformation(session('g_cart'), $attributes)->json();
+    }
+
     private function magentoCustomerToken()
     {
         $magento = new Magento();

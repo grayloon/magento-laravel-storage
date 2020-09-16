@@ -255,6 +255,25 @@ class HasMagentoCartTest extends TestCase
             'postcode' => '*',
         ]));
     }
+
+    public function test_can_update_totals_information_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/totals-information' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeUpdateTotalsInformation([]));
+    }
+
+
+    public function test_update_totals_information_can_returns_empty_on_guest_without_cart()
+    {
+        $this->assertNull((new FakeHasMagentoCart())->fakeUpdateTotalsInformation());
+    }
 }
 
 class FakeHasMagentoCart
@@ -289,5 +308,10 @@ class FakeHasMagentoCart
     public function fakeEstimateShippingMethod($addressAttributes = [])
     {
         return $this->estimateShippingMethod($addressAttributes = []);
+    }
+
+    public function fakeUpdateTotalsInformation($attributes = [])
+    {
+        return $this->updateTotalsInformation($attributes = []);
     }
 }
