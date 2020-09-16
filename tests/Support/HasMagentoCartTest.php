@@ -269,7 +269,6 @@ class HasMagentoCartTest extends TestCase
         $this->assertIsArray((new FakeHasMagentoCart())->fakeUpdateTotalsInformation([]));
     }
 
-
     public function test_update_totals_information_can_returns_empty_on_guest_without_cart()
     {
         $this->assertNull((new FakeHasMagentoCart())->fakeUpdateTotalsInformation());
