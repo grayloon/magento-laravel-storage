@@ -129,9 +129,9 @@ trait HasMagentoCart
             return;
         }
 
-        return (new Magento())->api('guestCarts')->estimateShippingMethods(session('g_cart'), [
-            'address' => $addressAttributes,
-        ])->json();
+        return $this->customerIsSignedIn()
+            ? $this->magentoCustomerToken()->api('carts')->estimateShippingMethods(['address' => $addressAttributes])->json()
+            : (new Magento())->api('guestCarts')->estimateShippingMethods(session('g_cart'), ['address' => $addressAttributes])->json();
     }
 
     protected function updateTotalsInformation($attributes = [])
@@ -140,7 +140,9 @@ trait HasMagentoCart
             return;
         }
 
-        return (new Magento())->api('guestCarts')->totalsInformation(session('g_cart'), $attributes)->json();
+        return $this->customerIsSignedIn()
+            ? $this->magentoCustomerToken()->api('carts')->totalsInformation($attributes)->json()
+            : (new Magento())->api('guestCarts')->totalsInformation(session('g_cart'), $attributes)->json();
     }
 
     private function magentoCustomerToken()

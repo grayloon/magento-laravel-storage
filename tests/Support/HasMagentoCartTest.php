@@ -231,6 +231,28 @@ class HasMagentoCartTest extends TestCase
         $this->assertIsArray((new FakeHasMagentoCart())->fakeEstimateShippingMethod());
     }
 
+
+    public function test_estimate_shipping_method_can_estimate_as_customer()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine/estimate-shipping-methods' => Http::response([
+                0 => [
+                    'amount' => 4,
+                ],
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeEstimateShippingMethod());
+    }
+
+
     public function test_estimate_shipping_method_can_returns_empty_on_guest_without_cart()
     {
         $this->assertNull((new FakeHasMagentoCart())->fakeEstimateShippingMethod());
@@ -262,6 +284,24 @@ class HasMagentoCartTest extends TestCase
 
         Http::fake([
             '*/guest-carts/FAKE_CART/totals-information' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeUpdateTotalsInformation([]));
+    }
+
+    public function test_can_update_totals_information_as_customer()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine/totals-information' => Http::response([
                 'id' => 1,
             ], 200),
         ]);
