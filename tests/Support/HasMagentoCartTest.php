@@ -231,7 +231,6 @@ class HasMagentoCartTest extends TestCase
         $this->assertIsArray((new FakeHasMagentoCart())->fakeEstimateShippingMethod());
     }
 
-
     public function test_estimate_shipping_method_can_estimate_as_customer()
     {
         $this->actingAs(MagentoCustomerFactory::new()->create());
@@ -251,7 +250,6 @@ class HasMagentoCartTest extends TestCase
 
         $this->assertIsArray((new FakeHasMagentoCart())->fakeEstimateShippingMethod());
     }
-
 
     public function test_estimate_shipping_method_can_returns_empty_on_guest_without_cart()
     {
