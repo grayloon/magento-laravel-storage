@@ -311,6 +311,42 @@ class HasMagentoCartTest extends TestCase
     {
         $this->assertNull((new FakeHasMagentoCart())->fakeUpdateTotalsInformation());
     }
+
+    public function test_can_update_shipping_information_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/shipping-information' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeUpdateShippingInformation([]));
+    }
+
+    public function test_can_update_shipping_information_as_customer()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine/shipping-information' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeUpdateShippingInformation([]));
+    }
+
+    public function test_update_shipping_information_can_returns_empty_on_guest_without_cart()
+    {
+        $this->assertNull((new FakeHasMagentoCart())->fakeUpdateShippingInformation());
+    }
 }
 
 class FakeHasMagentoCart
@@ -350,5 +386,10 @@ class FakeHasMagentoCart
     public function fakeUpdateTotalsInformation($attributes = [])
     {
         return $this->updateTotalsInformation($attributes = []);
+    }
+
+    public function fakeUpdateShippingInformation($attributes = [])
+    {
+        return $this->updateShippingInformation($attributes = []);
     }
 }
