@@ -156,6 +156,17 @@ trait HasMagentoCart
             : (new Magento())->api('guestCarts')->shippingInformation(session('g_cart'), $attributes)->json();
     }
 
+    protected function paymentMethods()
+    {
+        if (! $this->existingCart()) {
+            return;
+        }
+
+        return $this->customerIsSignedIn()
+            ? $this->magentoCustomerToken()->api('carts')->paymentMethods()->json()
+            : (new Magento())->api('guestCarts')->paymentMethods(session('g_cart'))->json();
+    }
+
     private function magentoCustomerToken()
     {
         $magento = new Magento();
