@@ -383,6 +383,42 @@ class HasMagentoCartTest extends TestCase
     {
         $this->assertNull((new FakeHasMagentoCart())->fakePaymentMethods());
     }
+
+    public function test_can_submit_payment_as_customer()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine/payment-information' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeSubmitPayment(['foo']));
+    }
+
+    public function test_submit_payment__returns_empty_on_guest_without_cart()
+    {
+        $this->assertNull((new FakeHasMagentoCart())->fakeSubmitPayment([]));
+    }
+
+    public function test_can_submit_payments_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/payment-information' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeSubmitPayment([]));
+    }
 }
 
 class FakeHasMagentoCart
@@ -432,5 +468,10 @@ class FakeHasMagentoCart
     public function fakePaymentMethods()
     {
         return $this->paymentMethods();
+    }
+
+    public function fakeSubmitPayment($attributes = [])
+    {
+        return $this->submitPayment($attributes = []);
     }
 }
