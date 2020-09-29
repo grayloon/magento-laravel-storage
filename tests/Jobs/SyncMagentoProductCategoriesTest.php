@@ -22,7 +22,7 @@ class SyncMagentoProductCategoriesTest extends TestCase
                     'sku' => $product->sku,
                     'category_id' => $category->id,
                     'position' => 1,
-                ]
+                ],
             ], 200),
         ]);
 

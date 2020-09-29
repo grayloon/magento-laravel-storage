@@ -18,7 +18,7 @@ class SyncMagentoProductCategoriesCommandTest extends TestCase
 
         Queue::assertPushed(SyncMagentoProductCategories::class);
     }
-    
+
     public function test_magento_product_categories_command_handles_empty_categories_result()
     {
         Queue::fake();

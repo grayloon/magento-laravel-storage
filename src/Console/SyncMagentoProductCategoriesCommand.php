@@ -33,7 +33,7 @@ class SyncMagentoProductCategoriesCommand extends Command
 
         foreach ($categories as $category) {
             SyncMagentoProductCategories::dispatch($category->id);
-            $this->info('Successfully launched job to get the products assigned to the "'. $category->name .'" category.');
+            $this->info('Successfully launched job to get the products assigned to the "'.$category->name.'" category.');
         }
     }
 }
