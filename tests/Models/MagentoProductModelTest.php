@@ -201,4 +201,142 @@ class MagentoProductModelTest extends TestCase
         $this->assertNotEmpty($response);
         $this->assertEquals(5, $response->count());
     }
+
+    public function test_missing_sale_price_is_null()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $this->assertNull($product->load('customAttributes')->salePrice());
+    }
+
+    public function test_sale_price_without_start_and_end_date_is_sale_price()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+
+        $this->assertEquals('9.99', $product->load('customAttributes')->salePrice());
+    }
+
+    public function test_sale_price_with_start_date_before_now_but_missing_end_date_is_sale_price()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_from_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->subDay()->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertEquals('9.99', $product->load('customAttributes')->salePrice());
+    }
+
+    public function test_sale_price_with_start_date_after_now_but_missing_end_date_is_null()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_from_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->addDay()->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertNull($product->load('customAttributes')->salePrice());
+    }
+
+    public function test_sale_price_with_start_date_before_now_and_end_date_before_now_is_null()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_from_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->subDays(5)->format('Y-m-d H:i:s'),
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_to_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->subDays(3)->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertNull($product->load('customAttributes')->salePrice());
+    }
+
+    public function test_sale_price_with_start_date_before_now_and_end_date_after_now_is_sale_price()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_from_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->subDays(5)->format('Y-m-d H:i:s'),
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_to_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->addDays(3)->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertEquals('9.99', $product->load('customAttributes')->salePrice());
+    }
+
+    public function test_sale_price_with_missing_start_date_before_but_end_date_is_before_now_is_null()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_to_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->subDay()->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertNull($product->load('customAttributes')->salePrice());
+    }
+
+    public function test_sale_price_with_missing_start_date_before_but_end_date_is_after_now_is_sale_price()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_to_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => now()->addDay()->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertEquals('9.99', $product->load('customAttributes')->salePrice());
+    }
 }

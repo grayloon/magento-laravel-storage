@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class MagentoProduct extends Model
@@ -113,5 +114,58 @@ class MagentoProduct extends Model
     {
         return $this->hasManyThrough(MagentoProduct::class, MagentoProductLink::class, 'product_id', 'id', 'id', 'related_product_id')
             ->orderBy('position');
+    }
+
+    /**
+     * Determine the Sale Price is available.
+     *
+     * @return string|null
+     */
+    public function salePrice()
+    {
+        $salePrice = $this->customAttributes
+            ->where('attribute_type', 'special_price')
+            ->first();
+
+        if (! $salePrice) {
+            return;
+        }
+
+        $saleStart = $this->customAttributes
+            ->where('attribute_type', 'special_from_date')
+            ->first();
+
+        $saleEnd = $this->customAttributes
+            ->where('attribute_type', 'special_to_date')
+            ->first();
+
+        if (! $saleStart && ! $saleEnd) {
+            return $salePrice->value;
+        }
+
+        if ($saleStart) {
+            $saleStart = new Carbon($saleStart->value);
+        }
+        if ($saleEnd) {
+            $saleEnd = new Carbon($saleEnd->value);
+        }
+
+        if ($saleStart) {
+            if ($saleStart <= now()) {
+                if (! $saleEnd) {
+                    return $salePrice->value;
+                }
+
+                return ($saleEnd < now())
+                    ? null
+                    : $salePrice->value;
+            } else { // Sale hasn't started yet.
+                return;
+            }
+        }
+
+        return ($saleEnd >= now())
+            ? $salePrice->value
+            : null;
     }
 }
