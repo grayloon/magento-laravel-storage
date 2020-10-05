@@ -116,7 +116,6 @@ class MagentoProduct extends Model
             ->orderBy('position');
     }
 
-
     /**
      * Determine the Sale Price is available.
      *
