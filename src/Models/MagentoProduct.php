@@ -124,14 +124,21 @@ class MagentoProduct extends Model
      */
     public function salePrice()
     {
-        $salePrice = $this->customAttributes->where('attribute_type', 'special_price')->first();
+        $salePrice = $this->customAttributes
+            ->where('attribute_type', 'special_price')
+            ->first();
 
         if (! $salePrice) {
             return;
         }
 
-        $saleStart = $this->customAttributes->where('attribute_type', 'special_from_date')->first();
-        $saleEnd = $this->customAttributes->where('attribute_type', 'special_to_date')->first();
+        $saleStart = $this->customAttributes
+            ->where('attribute_type', 'special_from_date')
+            ->first();
+
+        $saleEnd = $this->customAttributes
+            ->where('attribute_type', 'special_to_date')
+            ->first();
 
         if (! $saleStart && ! $saleEnd) {
             return $salePrice->value;
@@ -150,11 +157,9 @@ class MagentoProduct extends Model
                     return $salePrice->value;
                 }
 
-                if ($saleEnd < now()) {
-                    return null;
-                } else {
-                    return $salePrice->value;
-                }
+                return ($saleEnd < now())
+                    ? null
+                    : $salePrice->value;
             } else { // Sale hasn't started yet.
                 return;
             }
