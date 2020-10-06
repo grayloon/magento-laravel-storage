@@ -5,6 +5,7 @@ namespace Grayloon\MagentoStorage\Tests\Support;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
 use Grayloon\MagentoStorage\Support\HasMagentoCart;
 use Grayloon\MagentoStorage\Tests\TestCase;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Stringable;
 
@@ -399,7 +400,7 @@ class HasMagentoCartTest extends TestCase
             ], 200),
         ]);
 
-        $this->assertIsArray((new FakeHasMagentoCart())->fakeSubmitPayment(['foo']));
+        $this->assertInstanceOf(Response::class, (new FakeHasMagentoCart())->fakeSubmitPayment(['foo']));
     }
 
     public function test_submit_payment__returns_empty_on_guest_without_cart()
@@ -417,7 +418,7 @@ class HasMagentoCartTest extends TestCase
             ], 200),
         ]);
 
-        $this->assertIsArray((new FakeHasMagentoCart())->fakeSubmitPayment([]));
+        $this->assertInstanceOf(Response::class, (new FakeHasMagentoCart())->fakeSubmitPayment([]));
     }
 }
 

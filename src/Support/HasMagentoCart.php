@@ -174,8 +174,8 @@ trait HasMagentoCart
         }
 
         return $this->customerIsSignedIn()
-            ? $this->magentoCustomerToken()->api('carts')->paymentInformation($attributes)->json()
-            : (new Magento())->api('guestCarts')->paymentInformation(session('g_cart'), $attributes)->json();
+            ? $this->magentoCustomerToken()->api('carts')->paymentInformation($attributes)
+            : (new Magento())->api('guestCarts')->paymentInformation(session('g_cart'), $attributes);
     }
 
     private function magentoCustomerToken()
