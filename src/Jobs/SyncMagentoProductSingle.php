@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Jobs;
 
 use Grayloon\Magento\Magento;
+use Grayloon\MagentoStorage\Events\MagentoProductSynced;
 use Grayloon\MagentoStorage\Support\MagentoProducts;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,10 +39,12 @@ class SyncMagentoProductSingle implements ShouldQueue
      */
     public function handle()
     {
-        $product = (new Magento())->api('products')
+        $apiProduct = (new Magento())->api('products')
             ->show($this->sku)
             ->json();
 
-        (new MagentoProducts())->updateOrCreateProduct($product);
+        $product = (new MagentoProducts())->updateOrCreateProduct($apiProduct);
+
+        event(new MagentoProductSynced($product));
     }
 }
