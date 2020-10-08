@@ -42,7 +42,6 @@ class SyncMagentoProductSingle implements ShouldQueue
         $apiProduct = (new Magento())->api('products')
             ->show($this->sku)
             ->json();
-            
 
         $product = (new MagentoProducts())->updateOrCreateProduct($apiProduct);
 

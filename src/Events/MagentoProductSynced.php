@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 class MagentoProductSynced
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    
+
     public $product;
 
     /**
