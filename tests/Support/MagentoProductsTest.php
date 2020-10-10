@@ -117,6 +117,7 @@ class MagentoProductsTest extends TestCase
         Queue::fake();
         MagentoCategoryFactory::new()->create();
         MagentoProductFactory::new()->create([
+            'id' => 2,
             'sku' => 'bar',
         ]);
 

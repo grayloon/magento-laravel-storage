@@ -22,7 +22,6 @@ class MagentoProductFactory extends Factory
     public function definition()
     {
         return [
-            'id'         => rand(1, 10000),
             'sku'        => $this->faker->ean8,
             'name'       => $this->faker->bs,
             'price'      => $this->faker->randomFloat(2, 1, 500),

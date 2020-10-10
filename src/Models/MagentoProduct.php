@@ -14,14 +14,7 @@ class MagentoProduct extends Model
      * @var bool
      */
     public $timestamps = false;
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
+    
     /**
      * The attributes that aren't mass assignable.
      *
