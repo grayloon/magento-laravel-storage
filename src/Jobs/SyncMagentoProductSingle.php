@@ -44,7 +44,7 @@ class SyncMagentoProductSingle implements ShouldQueue
             ->show($this->sku);
 
         if (! $apiProduct->ok()) {
-            throw new Exception('Error fetching SKU: '. $this->sku .' Error: '. $apiProduct->json()['body'] ?? 'N/A');
+            throw new Exception('Error fetching SKU: '.$this->sku.' Error: '.$apiProduct->json()['body'] ?? 'N/A');
         }
 
         $product = (new MagentoProducts())->updateOrCreateProduct($apiProduct->json());
