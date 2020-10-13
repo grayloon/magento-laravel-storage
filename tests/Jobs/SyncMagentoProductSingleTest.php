@@ -34,7 +34,6 @@ class SyncMagentoProductSingleTest extends TestCase
 
         $this->assertEquals(0, MagentoProduct::count());
     }
-    
 
     public function test_sync_product_single_fires_synced_event()
     {
