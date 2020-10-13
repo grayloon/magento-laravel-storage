@@ -27,13 +27,14 @@ class SyncMagentoProductSingleTest extends TestCase
     {
         $product = MagentoProductFactory::new()->create();
         Http::fake([
-            '*rest/all/V1/products/'.$product->sku => Http::response(['message' => 'Product not found.'], 401),
+            '*rest/all/V1/products/'.$product->sku => Http::response(['message' => 'Product not found.'], 404),
         ]);
 
         SyncMagentoProductSingle::dispatchNow($product->sku);
 
         $this->assertEquals(0, MagentoProduct::count());
     }
+    
 
     public function test_sync_product_single_fires_synced_event()
     {
