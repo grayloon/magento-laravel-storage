@@ -2,7 +2,6 @@
 
 namespace Grayloon\MagentoStorage\Jobs;
 
-use Exception;
 use Grayloon\Magento\Magento;
 use Grayloon\MagentoStorage\Events\MagentoProductSynced;
 use Grayloon\MagentoStorage\Support\MagentoProducts;
@@ -43,8 +42,8 @@ class SyncMagentoProductSingle implements ShouldQueue
         $apiProduct = (new Magento())->api('products')
             ->show($this->sku);
 
-        if (! $apiProduct->ok()) {
-            throw new Exception('Error fetching SKU: '. $this->sku .' Error: '. $apiProduct->json()['body'] ?? 'N/A');
+        if (! $apiProduct->successful()) {
+            return (new MagentoProducts())->deleteIfExists($this->sku);
         }
 
         $product = (new MagentoProducts())->updateOrCreateProduct($apiProduct->json());

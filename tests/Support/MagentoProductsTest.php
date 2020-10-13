@@ -185,6 +185,16 @@ class MagentoProductsTest extends TestCase
         $this->assertEquals('paper-and-office-supplies', $product->slug);
     }
 
+    public function test_deletes_if_exists()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $magentoProducts = new MagentoProducts();
+        $magentoProducts->deleteIfExists($product->sku);
+
+        $this->assertNull($product->fresh());
+    }
+
     protected function fakeProduct($attributes = null)
     {
         $product = [

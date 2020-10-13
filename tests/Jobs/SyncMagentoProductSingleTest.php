@@ -2,6 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Tests\Jobs;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Events\MagentoProductSynced;
 use Grayloon\MagentoStorage\Jobs\SyncMagentoProductSingle;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
@@ -20,6 +21,18 @@ class SyncMagentoProductSingleTest extends TestCase
         SyncMagentoProductSingle::dispatchNow('DMPC001');
 
         $this->assertEquals(1, MagentoProduct::count());
+    }
+
+    public function test_deletes_if_record_not_found()
+    {
+        $product = MagentoProductFactory::new()->create();
+        Http::fake([
+            '*rest/all/V1/products/'.$product->sku => Http::response(['message' => 'Product not found.'], 401),
+        ]);
+
+        SyncMagentoProductSingle::dispatchNow($product->sku);
+
+        $this->assertEquals(0, MagentoProduct::count());
     }
 
     public function test_sync_product_single_fires_synced_event()

@@ -56,6 +56,21 @@ class MagentoProducts extends PaginatableMagentoService
     }
 
     /**
+     * Deletes the record if the product no longer exists.
+     *
+     * @param  string  $sku
+     * @return void
+     */
+    public function deleteIfExists($sku)
+    {
+        $product = MagentoProduct::where('sku', $sku)->first();
+
+        $product->delete();
+
+        return $this;
+    }
+
+    /**
      * Check if Custom Attributes have applied rules to be applied.
      *
      * @param  array  $attribute
