@@ -104,9 +104,7 @@ class HasMagentoCartTest extends TestCase
         config(['magento.store_code' => 'foo']);
 
         Http::fake([
-            '*/carts/mine' => Http::response([
-                'id' => 1,
-            ], 200),
+            '*/carts/mine' => Http::response(1, 200),
         ]);
 
         (new FakeHasMagentoCart())->fakeCreateCart();

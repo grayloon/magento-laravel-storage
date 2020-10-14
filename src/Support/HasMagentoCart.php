@@ -47,7 +47,7 @@ trait HasMagentoCart
     protected function createCart()
     {
         $this->customerIsSignedIn()
-            ? session(['cart_quote_id' => $this->magentoCustomerToken()->api('carts')->mine()->json()['id']])
+            ? session(['cart_quote_id' => $this->magentoCustomerToken()->api('carts')->create()->json()])
             : session(['g_cart' => $this->stripStringQuotes((new Magento())->api('guestCarts')->create()->body())]);
 
         return $this;
