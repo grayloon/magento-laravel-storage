@@ -14,7 +14,7 @@ class AddSyncedAtToProductsMediaTable extends Migration
     public function up()
     {
         Schema::table('magento_product_media', function (Blueprint $table) {
-            $table->timestamp('synced_at')->useCurrent();
+            $table->timestamp('synced_at')->nullable();
         });
     }
 
