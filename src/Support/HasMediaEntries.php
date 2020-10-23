@@ -2,8 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Support;
 
-use Grayloon\MagentoStorage\Jobs\DownloadMagentoProductImage;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Grayloon\MagentoStorage\Jobs\DownloadMagentoProductImage;
 
 trait HasMediaEntries
 {
@@ -14,8 +15,10 @@ trait HasMediaEntries
      * @param  \Grayloon\Magento\Models\MagentoProduct  $product
      * @return void
      */
-    public function downloadProductImages($images, $product)
+    public function downloadProductImages($images, MagentoProduct $product)
     {
+        $product->images()->delete();
+        
         foreach ($images as $image) {
             MagentoProductMedia::updateOrCreate([
                 'id'         => $image['id'],
@@ -29,7 +32,6 @@ trait HasMediaEntries
                 'file'       => $image['file'],
                 'synced_at'  => now(),
             ]);
-
             DownloadMagentoProductImage::dispatch($image['file']);
         }
 
