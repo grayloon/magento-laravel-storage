@@ -27,6 +27,7 @@ trait HasMediaEntries
                 'disabled'   => $image['disabled'],
                 'types'      => $image['types'],
                 'file'       => $image['file'],
+                'synced_at'  => now(),
             ]);
 
             DownloadMagentoProductImage::dispatch($image['file']);

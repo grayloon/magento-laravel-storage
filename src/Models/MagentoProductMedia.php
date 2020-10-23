@@ -20,7 +20,15 @@ class MagentoProductMedia extends Model
         'disabled',
         'types',
         'file',
+        'synced_at',
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at', 'synced_at'];
 
     /**
      * The attributes that should be cast to native types.
