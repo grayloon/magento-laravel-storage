@@ -106,6 +106,40 @@ class HasMediaEntriesTest extends TestCase
         $this->assertEquals('foo', MagentoProductMedia::first()->label);
     }
 
+    public function test_deletes_and_doesnt_persist_existing_image()
+    {
+        Queue::fake();
+
+        $product = MagentoProductFactory::new()->create();
+        $image = MagentoProductMediaFactory::new()->create([
+            'id' => 1,
+            'product_id' => $product->id,
+            'label' => null,
+        ]);
+
+        $images = [
+            [
+                'id' => 2,
+                'media_type' => 'image',
+                'label' => 'foo',
+                'position' => 1,
+                'disabled' => false,
+                'types' => [
+                    'image',
+                    'small_image',
+                    'thumbnail',
+                ],
+                'file' => '/p/paper.jpg',
+            ],
+        ];
+
+        (new FakeSupportingMediaEntriesClass)->exposedDownloadProductImages($images, $product);
+
+        $this->assertEquals(1, MagentoProductMedia::count());
+        $this->assertEquals('foo', MagentoProductMedia::first()->label);
+        $this->assertEquals(2, MagentoProductMedia::first()->id);
+    }
+
     public function test_product_images_can_receive_empty_images_result()
     {
         $product = MagentoProductFactory::new()->create();
