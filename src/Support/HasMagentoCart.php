@@ -107,6 +107,21 @@ trait HasMagentoCart
         return $response;
     }
 
+
+    /**
+     * Remove a specified item to the cart.
+     *
+     * @return string|array
+     */
+    protected function removeItemFromCart($itemId)
+    {
+        $response = $this->customerIsSignedIn()
+            ? $this->magentoCustomerToken()->api('cartItems')->removeItem($itemId)->json()
+            : (new Magento())->api('guestCarts')->removeItem(session('g_cart'), $itemId)->json();
+
+        return $response;
+    }
+
     /**
      * Get the Cart Totals for the specified customer or guest cart.
      *

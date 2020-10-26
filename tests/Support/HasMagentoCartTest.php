@@ -418,6 +418,33 @@ class HasMagentoCartTest extends TestCase
 
         $this->assertInstanceOf(Response::class, (new FakeHasMagentoCart())->fakeSubmitPayment([]));
     }
+
+    public function test_remove_item_from_cart_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/items/1' => Http::response([], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeRemoveItemFromCart(1));
+    }
+
+    public function test_remove_item_from_cart_as_customer()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine/items/1' => Http::response([], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeRemoveItemFromCart(1));
+    }
 }
 
 class FakeHasMagentoCart
@@ -442,6 +469,11 @@ class FakeHasMagentoCart
     public function fakeAddItemToCart($sku, $qty)
     {
         return $this->addItemToCart($sku, $qty);
+    }
+
+    public function fakeRemoveItemFromCart($itemId)
+    {
+        return $this->removeItemFromCart($itemId);
     }
 
     public function fakeCartTotals()
