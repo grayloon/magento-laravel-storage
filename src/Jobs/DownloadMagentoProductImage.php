@@ -51,7 +51,7 @@ class DownloadMagentoProductImage implements ShouldQueue
     {
         $this->uri = $uri;
         $this->sku = $sku;
-    
+
         $this->directory = $this->directory ?: '/pub/media/catalog/product';
         $this->fullUrl = config('magento.base_url').$this->directory.$this->uri;
     }
@@ -66,9 +66,9 @@ class DownloadMagentoProductImage implements ShouldQueue
         try {
             $contents = file_get_contents($this->fullUrl);
         } catch (Exception $e) {
-            throw new Exception('Failed to download image for SKU: '. $this->sku .' Image URL: '. $this->fullUrl);
+            throw new Exception('Failed to download image for SKU: '.$this->sku.' Image URL: '.$this->fullUrl);
         }
-        
+
         $contents = file_get_contents($this->fullUrl);
         $name = substr($this->fullUrl, strrpos($this->fullUrl, '/') + 1);
 

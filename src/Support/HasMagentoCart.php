@@ -107,7 +107,6 @@ trait HasMagentoCart
         return $response;
     }
 
-
     /**
      * Remove a specified item to the cart.
      *
