@@ -32,7 +32,7 @@ trait HasMediaEntries
                 'file'       => $image['file'],
                 'synced_at'  => now(),
             ]);
-            DownloadMagentoProductImage::dispatch($image['file']);
+            DownloadMagentoProductImage::dispatch($image['file'], $product->sku);
         }
 
         return $this;
