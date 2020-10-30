@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
@@ -61,5 +62,32 @@ class MagentoCategoryModelTest extends TestCase
         $this->assertNotEmpty($products);
         $this->assertEquals(1, $products->count());
         $this->assertInstanceOf(MagentoProduct::class, $products->first());
+    }
+
+    public function test_custom_attribute_value_helper_returns_value_of_custom_attribute()
+    {
+        $category = MagentoCategoryFactory::new()->create();
+
+        MagentoCustomAttributeFactory::new()->create([
+            'attributable_type'   => MagentoCategory::class,
+            'attributable_id'     => $category->id,
+            'attribute_type'      => 'foo',
+            'value'               => 'bar',
+        ]);
+
+        $category = $category->with('customAttributes')->first();
+
+        $this->assertEquals(1, $category->customAttributes()->count());
+        $this->assertEquals('bar', $category->customAttributeValue('foo'));
+    }
+
+    public function test_custom_attribute_value_helper_returns_null_of_invalid_custom_attribute()
+    {
+        $category = MagentoCategoryFactory::new()->create();
+
+        $category = $category->with('customAttributes')->first();
+
+        $this->assertEquals(0, $category->customAttributes()->count());
+        $this->assertNull($category->customAttributeValue('foo'));
     }
 }

@@ -45,4 +45,17 @@ class MagentoCategory extends Model
     {
         return $this->hasManyThrough(MagentoProduct::class, MagentoProductCategory::class, 'magento_category_id', 'id', 'id', 'magento_product_id');
     }
+
+    /**
+     * Helper to quickly get a value from a custom attribute.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function customAttributeValue($key)
+    {
+        $attribute = $this->customAttributes->where('attribute_type', $key)->first();
+
+        return $attribute ? $attribute->value : null;
+    }
 }
