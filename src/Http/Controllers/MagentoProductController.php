@@ -2,7 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Http\Controllers;
 
-use Grayloon\MagentoStorage\Jobs\SyncMagentoProduct;
+use Grayloon\MagentoStorage\Jobs\SyncMagentoProductSingle;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Bus;
@@ -19,7 +19,7 @@ class MagentoProductController extends Controller
      */
     public function update(Request $request, $sku)
     {
-        Bus::dispatch(new SyncMagentoProduct($sku));
+        Bus::dispatch(new SyncMagentoProductSingle($sku));
 
         return response()->json(['success' => 'success'], 200);
     }

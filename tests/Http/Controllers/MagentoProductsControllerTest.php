@@ -2,7 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Tests\Http\Controllers;
 
-use Grayloon\MagentoStorage\Jobs\SyncMagentoProduct;
+use Grayloon\MagentoStorage\Jobs\SyncMagentoProductSingle;
 use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -24,6 +24,6 @@ class MagentoProductsControllerTest extends TestCase
         $this->getJson(route('laravel-magento-api.products.update', 'foo'))
             ->assertSuccessful();
 
-        Queue::assertPushed(SyncMagentoProduct::class);
+        Queue::assertPushed(SyncMagentoProductSingle::class);
     }
 }
