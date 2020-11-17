@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Jobs;
 
 use Exception;
+use Grayloon\MagentoStorage\Events\MagentoProductImageDownloaded;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -69,9 +70,8 @@ class DownloadMagentoProductImage implements ShouldQueue
             throw new Exception('Failed to download image for SKU: '.$this->sku.' Image URL: '.$this->fullUrl);
         }
 
-        $contents = file_get_contents($this->fullUrl);
-        $name = substr($this->fullUrl, strrpos($this->fullUrl, '/') + 1);
-
         Storage::put('public/product/'.$this->uri, $contents);
+
+        event(new MagentoProductImageDownloaded('public/product/'.$this->uri));
     }
 }
