@@ -16,7 +16,7 @@ class MagentoProductImageDownloaded
      * @var string
      */
     public $image;
-    
+
     /**
      * Create a new event instance.
      *
