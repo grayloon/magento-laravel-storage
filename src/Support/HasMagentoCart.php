@@ -205,8 +205,8 @@ trait HasMagentoCart
         }
 
         return $this->customerIsSignedIn()
-            ? $this->magentoCustomerToken()->api('carts')->couponCode($couponCode)->json()
-            : (new Magento())->api('guestCarts')->couponCode(session('g_cart'), $couponCode)->json();
+            ? $this->magentoCustomerToken()->api('carts')->couponCode($couponCode)
+            : (new Magento())->api('guestCarts')->couponCode(session('g_cart'), $couponCode);
     }
 
     private function magentoCustomerToken()

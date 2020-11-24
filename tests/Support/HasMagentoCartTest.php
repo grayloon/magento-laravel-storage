@@ -456,7 +456,7 @@ class HasMagentoCartTest extends TestCase
             ], 200),
         ]);
 
-        $this->assertIsArray((new FakeHasMagentoCart())->fakeApplyCouponCode('foo'));
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeApplyCouponCode('foo')->json());
     }
 
     public function test_can_apply_coupon_as_customer()
@@ -474,7 +474,7 @@ class HasMagentoCartTest extends TestCase
             ], 200),
         ]);
 
-        $this->assertIsArray((new FakeHasMagentoCart())->fakeApplyCouponCode('foo'));
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeApplyCouponCode('foo')->json());
     }
 }
 
