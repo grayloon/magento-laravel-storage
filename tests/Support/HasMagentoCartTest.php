@@ -445,6 +445,37 @@ class HasMagentoCartTest extends TestCase
 
         $this->assertIsArray((new FakeHasMagentoCart())->fakeRemoveItemFromCart(1));
     }
+
+    public function test_can_apply_coupon_as_guest()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART/coupons/foo' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeApplyCouponCode('foo'));
+    }
+
+    public function test_can_apply_coupon_as_customer()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine/coupons/foo' => Http::response([
+                'id' => 1,
+            ], 200),
+        ]);
+
+        $this->assertIsArray((new FakeHasMagentoCart())->fakeApplyCouponCode('foo'));
+    }
 }
 
 class FakeHasMagentoCart
@@ -480,6 +511,12 @@ class FakeHasMagentoCart
     {
         return $this->cartTotals();
     }
+
+    public function fakeApplyCouponCode($couponCode)
+    {
+        return $this->applyCouponCode($couponCode);
+    }
+
 
     public function fakeEstimateShippingMethod($addressAttributes = [])
     {
