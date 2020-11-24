@@ -517,7 +517,6 @@ class FakeHasMagentoCart
         return $this->applyCouponCode($couponCode);
     }
 
-
     public function fakeEstimateShippingMethod($addressAttributes = [])
     {
         return $this->estimateShippingMethod($addressAttributes = []);
