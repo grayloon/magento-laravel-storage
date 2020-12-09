@@ -108,6 +108,24 @@ trait HasMagentoCart
     }
 
     /**
+     * Edit a specified item in the cart.
+     *
+     * @return string|array
+     */
+    protected function editItem($itemId, $body = [])
+    {
+        $response = $this->customerIsSignedIn()
+            ? $this->magentoCustomerToken()->api('cartItems')->editItem($itemId, $body)->json()
+            : (new Magento())->api('guestCarts')->editItem(session('g_cart'), $itemId, $body)->json();
+
+        if (isset($response['message']) && $response['message'] === 'The requested qty is not available') {
+            return;
+        }
+
+        return $response;
+    }
+
+    /**
      * Remove a specified item to the cart.
      *
      * @return string|array
