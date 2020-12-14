@@ -14,7 +14,7 @@ class AddIsQueuedToMagentoCustomAttributeTypesTable extends Migration
     public function up()
     {
         Schema::table('magento_custom_attribute_types', function (Blueprint $table) {
-            $table->timestamp('synced_at')->nullable();
+            $table->tinyInteger('is_queued')->default(0);
         });
     }
 
