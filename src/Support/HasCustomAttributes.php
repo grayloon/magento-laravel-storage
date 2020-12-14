@@ -22,7 +22,7 @@ trait HasCustomAttributes
             'options'      => [],
         ]);
 
-        if ($type->wasRecentlyCreated || now()->addDay() >= $type->synced_at) {
+        if ($type->wasRecentlyCreated || ! $type->synced_at || now() >= $type->synced_at->addDay()) {
             UpdateProductAttributeGroup::dispatch($type);
         }
 
