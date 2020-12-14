@@ -24,6 +24,7 @@ class MagentoCustomAttributeTypeFactory extends Factory
         return [
             'name'         => $this->faker->catchPhrase,
             'display_name' => $this->faker->catchPhrase,
+            'synced_at'    => now(),
         ];
     }
 }
