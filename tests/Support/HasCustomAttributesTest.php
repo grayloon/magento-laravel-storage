@@ -31,6 +31,7 @@ class HasCustomAttributesTest extends TestCase
         Queue::fake();
         $existing = MagentoCustomAttributeTypeFactory::new()->create([
             'name' => 'foo_bar',
+            'synced_at' => now()->subMinutes(5),
         ]);
 
         $type = (new FakeSupportingClass)->exposedResolveCustomAttributeType('foo_bar');
