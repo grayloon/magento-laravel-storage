@@ -89,7 +89,7 @@ class HasCustomAttributesTest extends TestCase
         $this->assertEquals(1, MagentoCustomAttributeType::count());
         Queue::assertPushed(UpdateProductAttributeGroup::class);
     }
-    
+
     public function test_doesnt_update_type_when_queued()
     {
         Queue::fake();

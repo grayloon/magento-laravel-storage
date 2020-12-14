@@ -13,7 +13,7 @@ class SyncMagentoCustomAttributeTypesCommandTest extends TestCase
     public function test_launches_jobs_to_import_types()
     {
         Queue::fake();
-        
+
         $type = MagentoCustomAttributeTypeFactory::new()->create();
 
         $this->artisan('magento:sync-custom-attribute-types');
@@ -24,7 +24,7 @@ class SyncMagentoCustomAttributeTypesCommandTest extends TestCase
     public function test_throws_exception_when_no_types_are_available()
     {
         $this->expectException(Exception::class);
-        
+
         Queue::fake();
 
         $this->artisan('magento:sync-custom-attribute-types');
