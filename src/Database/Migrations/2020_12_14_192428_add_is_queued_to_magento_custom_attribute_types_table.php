@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIsQueuedToMagentoCustomAttributeTypesTable extends Migration
+class AddSyncedAtToMagentoCustomAttributeTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddIsQueuedToMagentoCustomAttributeTypesTable extends Migration
     public function up()
     {
         Schema::table('magento_custom_attribute_types', function (Blueprint $table) {
-            $table->tinyInteger('is_queued')->default(0);
+            $table->timestamp('synced_at')->nullable();
         });
     }
 
@@ -25,8 +25,6 @@ class AddIsQueuedToMagentoCustomAttributeTypesTable extends Migration
      */
     public function down()
     {
-        Schema::table('magento_custom_attribute_types', function (Blueprint $table) {
-            $table->dropColumn('is_queued');
-        });
+        //
     }
 }

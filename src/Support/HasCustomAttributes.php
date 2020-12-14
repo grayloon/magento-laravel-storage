@@ -23,7 +23,11 @@ trait HasCustomAttributes
         ]);
 
         if ($type->wasRecentlyCreated || ! $type->synced_at || now() >= $type->synced_at->addDay()) {
-            UpdateProductAttributeGroup::dispatch($type);
+            if (! $type->is_queued) {
+                UpdateProductAttributeGroup::dispatch($type);
+
+                $type->update(['is_queued' => true]);
+            }
         }
 
         return $type;

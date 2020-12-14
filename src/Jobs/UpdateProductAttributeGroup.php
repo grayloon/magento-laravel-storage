@@ -47,6 +47,7 @@ class UpdateProductAttributeGroup implements ShouldQueue
             'display_name' => $api['default_frontend_label'] ?? $this->type->display_name,
             'options'      => $api['options'] ?? [],
             'synced_at'    => now(),
+            'is_queued'    => false,
         ]);
 
         $this->updateCustomAttributeTypeValues($this->type);

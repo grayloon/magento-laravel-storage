@@ -57,6 +57,23 @@ class HasCustomAttributesTest extends TestCase
         Queue::assertPushed(UpdateProductAttributeGroup::class);
     }
 
+    public function test_updates_is_queued_when_type_set_to_sync()
+    {
+        Queue::fake();
+        $existing = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'foo_bar',
+            'synced_at' => now()->subHours(25),
+        ]);
+
+        $type = (new FakeSupportingClass)->exposedResolveCustomAttributeType('foo_bar');
+
+        $this->assertNotEmpty($type);
+        $this->assertEquals($type->id, $existing->id);
+        $this->assertEquals(1, MagentoCustomAttributeType::count());
+        Queue::assertPushed(UpdateProductAttributeGroup::class);
+        $this->assertTrue($type->is_queued);
+    }
+
     public function test_updates_types_with_nullable_synced_at()
     {
         Queue::fake();
@@ -71,6 +88,22 @@ class HasCustomAttributesTest extends TestCase
         $this->assertEquals($type->id, $existing->id);
         $this->assertEquals(1, MagentoCustomAttributeType::count());
         Queue::assertPushed(UpdateProductAttributeGroup::class);
+    }
+    
+    public function test_doesnt_update_type_when_queued()
+    {
+        Queue::fake();
+        $existing = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'foo_bar',
+            'is_queued' => true,
+        ]);
+
+        $type = (new FakeSupportingClass)->exposedResolveCustomAttributeType('foo_bar');
+
+        $this->assertNotEmpty($type);
+        $this->assertEquals($type->id, $existing->id);
+        $this->assertEquals(1, MagentoCustomAttributeType::count());
+        Queue::assertNothingPushed();
     }
 
     public function test_resolves_existing_raw_value_from_empty_options()
