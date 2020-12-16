@@ -195,6 +195,24 @@ class MagentoProductsTest extends TestCase
         $this->assertNull($product->fresh());
     }
 
+    public function test_can_add_stock_item_data_as_custom_attributes()
+    {
+        Queue::fake();
+        MagentoCategoryFactory::new()->create();
+
+        $product = $this->fakeProduct();
+
+        $magentoProducts = new MagentoProducts();
+        $magentoProducts->updateOrCreateProduct($product);
+
+        $product = MagentoProduct::with('customAttributes', 'customAttributes.type')->first();
+
+        $this->assertNotEmpty($product);
+        $minQty = $product->customAttributes->where('attribute_type', 'stock-item--min_qty')->first();
+        $this->assertNotEmpty($minQty);
+        $this->assertEquals('3', $minQty->value);
+    }
+
     protected function fakeProduct($attributes = null)
     {
         $product = [
@@ -237,6 +255,7 @@ class MagentoProductsTest extends TestCase
                     'low_stock_date' => null,
                     'is_decimal_divided' => false,
                     'stock_status_changed_auto' => 0,
+                    'extension_attributes' => [],
                 ],
             ],
             'product_links' => [

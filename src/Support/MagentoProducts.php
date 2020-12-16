@@ -3,7 +3,9 @@
 namespace Grayloon\MagentoStorage\Support;
 
 use Grayloon\Magento\Magento;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Illuminate\Support\Str;
 
 class MagentoProducts extends PaginatableMagentoService
 {
@@ -51,8 +53,38 @@ class MagentoProducts extends PaginatableMagentoService
         $this->syncCustomAttributes($apiProduct['custom_attributes'], $product, true);
         $this->syncProductLinks($apiProduct['product_links'], $product);
         $this->downloadProductImages($apiProduct['media_gallery_entries'] ?? [], $product);
+        $this->syncStockItemAsAttributes($apiProduct['extension_attributes']['stock_item'] ?? [], $product);
 
         return $product;
+    }
+
+    /**
+     * Store Stock Item data as custom attributes.
+     *
+     * @param  array  $stockItems
+     * @param  \Grayloon\Magento\Models\MagentoProduct  $product
+     * @return void
+     */
+    protected function syncStockItemAsAttributes($stockItems, $product)
+    {
+        if (! $stockItems) {
+            return;
+        }
+
+        foreach ($stockItems as $key => $stockItem) {
+            $type = MagentoCustomAttributeType::firstOrCreate(['name' => 'stock-item--'.$key], [
+                'display_name' => Str::title(Str::snake(Str::studly($key), ' ')),
+                'options'      => [],
+                'synced_at'    => now(),
+            ]);
+
+            $product
+                ->customAttributes()
+                ->updateOrCreate(['attribute_type_id' => $type->id], [
+                    'attribute_type' => 'stock-item--'.$key,
+                    'value'          => is_array($stockItem) ? json_encode($stockItem) : $stockItem,
+                ]);
+        }
     }
 
     /**
