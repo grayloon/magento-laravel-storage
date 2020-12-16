@@ -40,16 +40,18 @@ class UpdateProductAttributeGroup implements ShouldQueue
     public function handle()
     {
         $api = (new Magento())->api('productAttributes')
-            ->show($this->type->name)
-            ->json();
+            ->show($this->type->name);
 
-        $this->type->update([
-            'display_name' => $api['default_frontend_label'] ?? $this->type->display_name,
-            'options'      => $api['options'] ?? [],
-            'synced_at'    => now(),
-            'is_queued'    => false,
-        ]);
+        if ($api->ok()) {
+            $response = $api->json();
+            $this->type->update([
+                'display_name' => $response['default_frontend_label'] ?? $this->type->display_name,
+                'options'      => $response['options'] ?? [],
+                'synced_at'    => now(),
+                'is_queued'    => false,
+            ]);
 
-        $this->updateCustomAttributeTypeValues($this->type);
+            $this->updateCustomAttributeTypeValues($this->type);
+        }
     }
 }
