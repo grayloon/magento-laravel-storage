@@ -50,7 +50,7 @@ class UpdateProductAttributeGroup implements ShouldQueue
                 'synced_at'    => now(),
                 'is_queued'    => false,
             ]);
-    
+
             $this->updateCustomAttributeTypeValues($this->type);
         }
     }
