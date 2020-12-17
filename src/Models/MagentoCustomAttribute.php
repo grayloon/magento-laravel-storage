@@ -32,4 +32,11 @@ class MagentoCustomAttribute extends Model
     {
         return $this->belongsTo(MagentoCustomAttributeType::class, 'attribute_type_id');
     }
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['created_at', 'updated_at', 'synced_at'];
 }

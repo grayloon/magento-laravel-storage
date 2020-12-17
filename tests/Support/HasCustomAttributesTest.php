@@ -4,8 +4,10 @@ namespace Grayloon\MagentoStorage\Tests\Support;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Support\HasCustomAttributes;
 use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Queue;
@@ -253,6 +255,185 @@ class HasCustomAttributesTest extends TestCase
 
         $this->assertNull($attribute->fresh()->value);
     }
+
+    public function test_can_create_custom_attribute()
+    {
+        MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'foo',
+            'options' => [['label' => 'bar', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $product = MagentoProductFactory::new()->create();
+
+        $attributes = [
+            [
+                'attribute_code' => 'foo',
+                'value'          => 2,
+            ],
+        ];
+
+        (new FakeSupportingClass)->exposedSyncCustomAttributes($attributes, $product);
+
+        $product->load('customAttributes');
+
+        $this->assertNotNull($product->customAttributes);
+        $this->assertEquals('bar', $product->customAttributes->first()->value);
+    }
+
+    public function test_updates_custom_attribute()
+    {
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'foo',
+            'options' => [['label' => 'bar', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $product = MagentoProductFactory::new()->create();
+        MagentoCustomAttributeFactory::new()->create([
+            'attribute_type'    => $type->name,
+            'attribute_type_id' => $type->id,
+            'value'             => 'foo',
+            'attributable_id'   => $product->id,
+            'attributable_type' => MagentoProduct::class,
+            'synced_at'         => now(),
+        ]);
+
+        $attributes = [
+            [
+                'attribute_code' => 'foo',
+                'value'          => 2,
+            ],
+        ];
+
+        (new FakeSupportingClass)->exposedSyncCustomAttributes($attributes, $product);
+
+        $product->load('customAttributes');
+
+        $this->assertNotNull($product->customAttributes);
+        $this->assertEquals(1, $product->customAttributes->count());
+        $this->assertEquals('bar', $product->customAttributes->first()->value);
+    }
+
+    public function test_removes_missing_custom_attribute()
+    {
+        $missingType = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'bar',
+            'options' => [['label' => 'baz', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'foo',
+            'options' => [['label' => 'bar', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $product = MagentoProductFactory::new()->create();
+        MagentoCustomAttributeFactory::new()->create([
+            'attribute_type'    => $missingType->name,
+            'attribute_type_id' => $missingType->id,
+            'value'             => 'baz',
+            'attributable_id'   => $product->id,
+            'attributable_type' => MagentoProduct::class,
+            'synced_at'         => now()->subMinutes(15),
+        ]);
+
+        $attributes = [
+            [
+                'attribute_code' => 'foo',
+                'value'          => 2,
+            ],
+        ];
+
+        (new FakeSupportingClass)->exposedSyncCustomAttributes($attributes, $product);
+
+        $product->load('customAttributes');
+
+        $this->assertNotNull($product->customAttributes);
+        $this->assertEquals(1, $product->customAttributes->count());
+        $this->assertEquals('bar', $product->customAttributes->first()->value);
+    }
+
+    public function test_removes_nullable_synced_at_custom_attribute()
+    {
+        $missingType = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'bar',
+            'options' => [['label' => 'baz', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'foo',
+            'options' => [['label' => 'bar', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $product = MagentoProductFactory::new()->create();
+        MagentoCustomAttributeFactory::new()->create([
+            'attribute_type'    => $missingType->name,
+            'attribute_type_id' => $missingType->id,
+            'value'             => 'baz',
+            'attributable_id'   => $product->id,
+            'attributable_type' => MagentoProduct::class,
+            'synced_at'         => null,
+        ]);
+
+        $attributes = [
+            [
+                'attribute_code' => 'foo',
+                'value'          => 2,
+            ],
+        ];
+
+        (new FakeSupportingClass)->exposedSyncCustomAttributes($attributes, $product);
+
+        $product->load('customAttributes');
+
+        $this->assertNotNull($product->customAttributes);
+        $this->assertEquals(1, $product->customAttributes->count());
+        $this->assertEquals('bar', $product->customAttributes->first()->value);
+    }
+
+    public function test_doesnt_remove_out_of_sync_attributes_when_in_group()
+    {
+        $otherType = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'bar',
+            'options' => [['label' => 'baz', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $type = MagentoCustomAttributeTypeFactory::new()->create([
+            'name' => 'foo',
+            'options' => [['label' => 'bar', 'value' => 2]],
+            'synced_at' => now(),
+        ]);
+
+        $product = MagentoProductFactory::new()->create();
+        MagentoCustomAttributeFactory::new()->create([
+            'attribute_type'    => $otherType->name,
+            'attribute_type_id' => $otherType->id,
+            'value'             => 'baz',
+            'attributable_id'   => $product->id,
+            'attributable_type' => MagentoProduct::class,
+            'synced_at'         => now(),
+        ]);
+
+        $attributes = [
+            [
+                'attribute_code' => 'foo',
+                'value'          => 2,
+            ],
+        ];
+
+        (new FakeSupportingClass)->exposedSyncCustomAttributes($attributes, $product);
+
+        $product->load('customAttributes');
+
+        $this->assertNotNull($product->customAttributes);
+        $this->assertEquals(2, $product->customAttributes->count());
+        $this->assertEquals('baz', $product->customAttributes->first()->value);
+    }
 }
 
 class FakeSupportingClass
@@ -272,5 +453,10 @@ class FakeSupportingClass
     public function exposedUpdateCustomAttributeTypeValues($type)
     {
         return $this->updateCustomAttributeTypeValues($type);
+    }
+
+    public function exposedSyncCustomAttributes($attributes, $model, $checkConditionalRules = false)
+    {
+        return $this->syncCustomAttributes($attributes, $model, $checkConditionalRules);
     }
 }

@@ -83,6 +83,7 @@ class MagentoProducts extends PaginatableMagentoService
                 ->updateOrCreate(['attribute_type_id' => $type->id], [
                     'attribute_type' => 'stock-item--'.$key,
                     'value'          => is_array($stockItem) ? json_encode($stockItem) : $stockItem,
+                    'synced_at'      => now(),
                 ]);
         }
     }
