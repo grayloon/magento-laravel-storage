@@ -69,6 +69,7 @@ trait HasCustomAttributes
             ->get()
             ->each(fn ($attribute) => $attribute->update([
                 'value' => $this->resolveCustomAttributeValue($type, $attribute->value),
+                'synced_at' => now(),
             ]));
 
         return $this;
@@ -97,8 +98,31 @@ trait HasCustomAttributes
                 ->updateOrCreate(['attribute_type_id' => $type->id], [
                     'attribute_type' => $attribute['attribute_code'],
                     'value'          => $value,
+                    'synced_at'      => now(),
                 ]);
+
+            $this->resolveRemovedAttributes($model);
         }
+
+        return $this;
+    }
+
+    /**
+     * Remove any Custom Attributes that are no longer in the response.
+     *
+     * @param  mixed  $model
+     * @return void
+     */
+    public function resolveRemovedAttributes($model)
+    {
+        $outOfSyncAttributes = $model
+            ->load('customAttributes')
+            ->customAttributes()
+            ->where(function ($query) {
+                $query->whereNull('synced_at')
+                    ->orWhere('synced_at', '<=', now()->subMinute());
+            })
+            ->delete();
 
         return $this;
     }

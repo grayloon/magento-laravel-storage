@@ -29,6 +29,7 @@ class MagentoCustomAttributeFactory extends Factory
             'value'               => $this->faker->catchPhrase,
             'attributable_type'   => $this->faker->randomElement([MagentoProduct::class, MagentoCategory::class]),
             'attributable_id'     => 1,
+            'synced_at'           => now(),
         ];
     }
 }
