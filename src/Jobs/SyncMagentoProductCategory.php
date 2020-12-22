@@ -20,11 +20,11 @@ class SyncMagentoProductCategory implements ShouldQueue
      * @var string
      */
     public $sku;
-    
+
     /**
-     * The Magento Product Category ID
+     * The Magento Product Category ID.
      *
-     * @var integer
+     * @var int
      */
     public $categoryId;
 
@@ -38,7 +38,7 @@ class SyncMagentoProductCategory implements ShouldQueue
     /**
      * The position ranking between the category and product.
      *
-     * @var integer
+     * @var int
      */
     public $position;
 
