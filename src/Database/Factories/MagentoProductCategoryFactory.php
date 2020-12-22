@@ -24,6 +24,7 @@ class MagentoProductCategoryFactory extends Factory
         return [
             'magento_product_id'  => MagentoProductFactory::new()->create(),
             'magento_category_id' => MagentoCategoryFactory::new()->create(),
+            'position'            => 1,
         ];
     }
 }

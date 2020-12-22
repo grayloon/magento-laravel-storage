@@ -15,11 +15,12 @@ class SyncMagentoProductCategoryTest extends TestCase
         $category = MagentoCategoryFactory::new()->create();
         $product = MagentoProductFactory::new()->create();
 
-        SyncMagentoProductCategory::dispatchNow($product->sku, $category->id);
+        SyncMagentoProductCategory::dispatchNow($product->sku, $category->id, 1);
 
         $this->assertEquals(1, MagentoProductCategory::count());
         $this->assertEquals($product->id, MagentoProductCategory::first()->magento_product_id);
         $this->assertEquals($category->id, MagentoProductCategory::first()->magento_category_id);
+        $this->assertEquals(1, MagentoProductCategory::first()->position);
     }
 
     public function test_product_categories_sync_missing_product_throws_exception()
@@ -27,6 +28,6 @@ class SyncMagentoProductCategoryTest extends TestCase
         $this->expectException('exception');
         $category = MagentoCategoryFactory::new()->create();
 
-        SyncMagentoProductCategory::dispatchNow('foo', $category->id);
+        SyncMagentoProductCategory::dispatchNow('foo', $category->id, 1);
     }
 }

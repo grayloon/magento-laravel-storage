@@ -152,23 +152,6 @@ class MagentoProductsTest extends TestCase
         $this->assertEquals('/p/paper.jpg', $product->images->first()->file);
     }
 
-    public function test_can_add_applied_rule_category_ids()
-    {
-        Queue::fake();
-        MagentoCategoryFactory::new()->create();
-
-        $product = $this->fakeProduct();
-
-        $magentoProducts = new MagentoProducts();
-        $magentoProducts->updateOrCreateProduct($product);
-
-        $product = MagentoProduct::with('categories')->first();
-
-        $this->assertNotEmpty($product);
-        $this->assertNotEmpty($product->categories);
-        $this->assertEquals(1, $product->categories->count());
-    }
-
     public function test_can_apply_rule_apply_slug()
     {
         Queue::fake();

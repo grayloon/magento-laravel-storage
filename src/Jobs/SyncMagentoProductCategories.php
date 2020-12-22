@@ -38,7 +38,7 @@ class SyncMagentoProductCategories implements ShouldQueue
             ->json();
 
         foreach ($this->links as $link) {
-            SyncMagentoProductCategory::dispatch($link['sku'], $this->categoryId);
+            SyncMagentoProductCategory::dispatch($link['sku'], $this->categoryId, $link['position']);
         }
     }
 }
