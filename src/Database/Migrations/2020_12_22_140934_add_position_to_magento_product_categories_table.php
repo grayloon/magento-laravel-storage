@@ -14,7 +14,7 @@ class AddPositionToMagentoProductCategoriesTable extends Migration
     public function up()
     {
         Schema::table('magento_product_categories', function (Blueprint $table) {
-            $table->integer('position');
+            $table->integer('position')->nullable();
         });
     }
 
