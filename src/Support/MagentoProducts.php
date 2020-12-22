@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class MagentoProducts extends PaginatableMagentoService
 {
-    use HasCustomAttributes, HasExtensionAttributes, HasProductLinks, HasMediaEntries, HasProductCategories;
+    use HasCustomAttributes, HasExtensionAttributes, HasProductLinks, HasMediaEntries;
 
     /**
      * The amount of total products.
@@ -112,10 +112,6 @@ class MagentoProducts extends PaginatableMagentoService
      */
     protected function applyConditionalRules($attribute, $product)
     {
-        if ($attribute['attribute_code'] === 'category_ids') {
-            $this->syncProductCategories($attribute['value'], $product);
-        }
-
         if ($attribute['attribute_code'] === 'url_key') {
             $product->update([
                 'slug' => $attribute['value'],
