@@ -49,7 +49,7 @@ class HasExtensionAttributesTest extends TestCase
             [
                 'category_id' => $category->id,
                 'position'    => 1,
-            ]
+            ],
         ]], $product);
 
         $this->assertEquals(1, MagentoExtensionAttributeType::count());
