@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Support;
 
 use Grayloon\Magento\Magento;
+use Grayloon\MagentoStorage\Jobs\DownloadMagentoCategoryImage;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
 
 class MagentoCategories extends PaginatableMagentoService
@@ -43,6 +44,25 @@ class MagentoCategories extends PaginatableMagentoService
     }
 
     /**
+     * Download the uploaded magento category image, if available.
+     *
+     * @param  array  $customAttributes
+     * @param  \Grayloon\Magento\Models\MagentoCategory $category
+     *
+     * @return void
+     */
+    protected function downloadCategoryImage($customAttributes, $category)
+    {
+        foreach ($customAttributes as $customAttribute) {
+            if ($customAttribute['attribute_code'] === 'image') {
+                DownloadMagentoCategoryImage::dispatch($customAttribute['value'], $category);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Updates a category from the Magento API.
      *
      * @param  array  $apiCategory
@@ -65,6 +85,7 @@ class MagentoCategories extends PaginatableMagentoService
         ]);
 
         $this->syncCustomAttributes($apiCategory['custom_attributes'], $category);
+        $this->downloadCategoryImage($apiCategory['custom_attributes'], $category);
 
         return $category;
     }
