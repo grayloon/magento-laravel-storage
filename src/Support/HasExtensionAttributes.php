@@ -46,8 +46,7 @@ trait HasExtensionAttributes
             MagentoProductCategory::updateOrCreate([
                 'magento_product_id'  => $product->id,
                 'magento_category_id' => MagentoCategory::find($link['category_id'])->id,
-                'position'            => $link['position'],
-            ]);
+            ], ['position'            => $link['position']]);
         }
     }
 }

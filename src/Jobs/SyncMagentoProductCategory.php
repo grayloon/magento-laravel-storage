@@ -66,7 +66,6 @@ class SyncMagentoProductCategory implements ShouldQueue
         MagentoProductCategory::updateOrCreate([
             'magento_product_id'  => $this->product->id,
             'magento_category_id' => $this->categoryId,
-            'position'            => $this->position,
-        ]);
+        ],  ['position'            => $this->position]);
     }
 }
