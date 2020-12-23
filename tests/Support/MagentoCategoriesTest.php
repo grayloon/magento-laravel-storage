@@ -249,8 +249,8 @@ class MagentoCategoriesTest extends TestCase
                     ],
                     [
                         'attribute_code' => 'image',
-                        'value' => 'pub/media/catalog/category/foo.jpg'
-                    ]
+                        'value' => 'pub/media/catalog/category/foo.jpg',
+                    ],
                 ],
             ],
         ];
