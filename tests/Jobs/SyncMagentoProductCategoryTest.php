@@ -6,7 +6,6 @@ use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Jobs\SyncMagentoProductCategory;
-use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoProductCategory;
 use Grayloon\MagentoStorage\Tests\TestCase;
 
@@ -26,7 +25,7 @@ class SyncMagentoProductCategoryTest extends TestCase
     }
 
     public function test_doesnt_create_duplicates_of_magento_category()
-    {;
+    {
         $category = MagentoCategoryFactory::new()->create();
         $product = MagentoProductFactory::new()->create();
         MagentoProductCategoryFactory::new()->create([
