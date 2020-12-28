@@ -511,7 +511,7 @@ class HasMagentoCartTest extends TestCase
 
         Http::fake([
             '*/guest-carts/FAKE_CART*' => Http::response([
-                'items_qty' => 0
+                'items_qty' => 0,
             ], 200),
         ]);
 
@@ -535,7 +535,7 @@ class HasMagentoCartTest extends TestCase
 
         Http::fake([
             '*/guest-carts/FAKE_CART*' => Http::response([
-                'items_qty' => 25
+                'items_qty' => 25,
             ], 200),
         ]);
 
@@ -553,7 +553,7 @@ class HasMagentoCartTest extends TestCase
 
         Http::fake([
             '*/carts/mine*' => Http::response([
-                'items_qty' => 0
+                'items_qty' => 0,
             ], 200),
         ]);
 
@@ -587,7 +587,7 @@ class HasMagentoCartTest extends TestCase
 
         Http::fake([
             '*/carts/mine*' => Http::response([
-                'items_qty' => 25
+                'items_qty' => 25,
             ], 200),
         ]);
 
