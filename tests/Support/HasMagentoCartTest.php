@@ -124,9 +124,7 @@ class HasMagentoCartTest extends TestCase
         ]);
 
         $this->assertIsArray((new FakeHasMagentoCart())->fakeAddItemToCart('foo', 1));
-        $this->assertEquals(1, session('ttl_qty_count'));
         $this->assertEquals(['sku' => 'foo'], (new FakeHasMagentoCart())->fakeAddItemToCart('foo', 1));
-        $this->assertEquals(2, session('ttl_qty_count'));
     }
 
     public function test_add_item_to_cart_returns_null_when_qty_not_available()
@@ -155,9 +153,7 @@ class HasMagentoCartTest extends TestCase
         ]);
 
         $this->assertIsArray((new FakeHasMagentoCart())->fakeAddItemToCart('foo', 1));
-        $this->assertEquals(1, session('ttl_qty_count'));
         $this->assertEquals(['sku' => 'foo'], (new FakeHasMagentoCart())->fakeAddItemToCart('foo', 1));
-        $this->assertEquals(2, session('ttl_qty_count'));
         $this->assertNotNull(session('customer_api_token'));
     }
 
@@ -503,6 +499,100 @@ class HasMagentoCartTest extends TestCase
 
         $this->assertIsArray((new FakeHasMagentoCart())->fakeEditCartItem('foo', []));
     }
+
+    public function test_cart_count_on_guest_without_cart_is_zero()
+    {
+        return $this->assertEquals(0, (new FakeHasMagentoCart())->fakeCartCount());
+    }
+
+    public function test_guest_with_no_items_in_cart_returns_zero()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART*' => Http::response([
+                'items_qty' => 0
+            ], 200),
+        ]);
+
+        return $this->assertEquals(0, (new FakeHasMagentoCart())->fakeCartCount());
+    }
+
+    public function test_guest_without_item_qty_count_in_response_is_zero()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART*' => Http::response([], 200),
+        ]);
+
+        return $this->assertEquals(0, (new FakeHasMagentoCart())->fakeCartCount());
+    }
+
+    public function test_guest_cart_with_quantity_count_is_valid_count()
+    {
+        $this->session(['g_cart' => 'FAKE_CART']);
+
+        Http::fake([
+            '*/guest-carts/FAKE_CART*' => Http::response([
+                'items_qty' => 25
+            ], 200),
+        ]);
+
+        return $this->assertEquals(25, (new FakeHasMagentoCart())->fakeCartCount());
+    }
+
+    public function test_customer_quantity_count_with_no_items_in_cart_is_zero()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine*' => Http::response([
+                'items_qty' => 0
+            ], 200),
+        ]);
+
+        return $this->assertEquals(0, (new FakeHasMagentoCart())->fakeCartCount());
+    }
+
+    public function test_customer_quantity_count_without_items_qty_in_response_is_zero()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine*' => Http::response([], 200),
+        ]);
+
+        return $this->assertEquals(0, (new FakeHasMagentoCart())->fakeCartCount());
+    }
+
+    public function test_customer_quantity_count_is_valid_with_item_response()
+    {
+        $this->actingAs(MagentoCustomerFactory::new()->create());
+        $this->session([
+            'customer_api_token' => 'FAKE_TOKEN',
+            'cart_quote_id' => 'FAKE_QUOTE_ID',
+        ]);
+        config(['magento.store_code' => 'foo']);
+
+        Http::fake([
+            '*/carts/mine*' => Http::response([
+                'items_qty' => 25
+            ], 200),
+        ]);
+
+        return $this->assertEquals(25, (new FakeHasMagentoCart())->fakeCartCount());
+    }
 }
 
 class FakeHasMagentoCart
@@ -572,5 +662,10 @@ class FakeHasMagentoCart
     public function fakeSubmitPayment($attributes = [])
     {
         return $this->submitPayment($attributes = []);
+    }
+
+    public function fakeCartCount()
+    {
+        return $this->cartCount();
     }
 }

@@ -39,6 +39,27 @@ trait HasMagentoCart
     }
 
     /**
+     * Counts the number of products and quantity currently in the cart.
+     *
+     * @return int
+     */
+    protected function cartCount()
+    {
+        if (! $this->existingCart()) {
+            return 0;
+        }
+
+        if ($this->customerIsSignedIn()) {
+            $magento = new Magento();
+            $magento->token = session('customer_api_token');
+
+            return $magento->api('carts')->mine()->json()['items_qty'] ??= 0;
+        } else {
+            return (new Magento())->api('guestCarts')->cart(session('g_cart'))->json()['items_qty'] ??= 0;
+        }
+    }
+
+    /**
      * Auth customers always have carts.
      * Create guest cart and assign it to the user session.
      *
@@ -99,10 +120,6 @@ trait HasMagentoCart
         if (isset($response['message']) && $response['message'] === 'The requested qty is not available') {
             return;
         }
-
-        (session()->has('ttl_qty_count'))
-            ? session(['ttl_qty_count' => session('ttl_qty_count') + $quantity])
-            : session(['ttl_qty_count' => $quantity]);
 
         return $response;
     }
