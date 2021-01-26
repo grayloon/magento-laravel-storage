@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.4",
-        "doctrine/dbal": "^3.0",
+        "doctrine/dbal": "^2.9|^3.0",
         "grayloon/laravel-magento-api": "dev-master",
         "guzzlehttp/guzzle": "^7.0",
         "illuminate/support": "^8.0"
