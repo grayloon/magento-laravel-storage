@@ -46,15 +46,15 @@ class SyncMagentoWebsitesCommand extends Command
         if (! $websites->ok()) {
             throw new Exception('Unable to retrieve website list.');
         }
-        
+
         foreach ($websites->json() as $website) {
             MagentoWebsite::updateOrCreate(
                 ['id' => $website['id']],
                 [
-                'code'      => $website['id'],
-                'name'      => $website['name'],
-                'synced_at' => now(),
-            ]
+                    'code'      => $website['id'],
+                    'name'      => $website['name'],
+                    'synced_at' => now(),
+                ]
             );
         }
     }

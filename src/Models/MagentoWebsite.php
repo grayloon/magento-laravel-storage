@@ -18,7 +18,7 @@ class MagentoWebsite extends Model
         'id',
         'code',
         'name',
-        'synced_at'
+        'synced_at',
     ];
 
     /**
