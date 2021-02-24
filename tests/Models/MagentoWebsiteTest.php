@@ -15,13 +15,15 @@ class MagentoWebsiteTest extends TestCase
     public function test_is_fillable()
     {
         $website = MagentoWebsite::create([
-            'id'   => 10,
-            'code' => 'Hello',
-            'name' => 'World',
+            'id'        => 10,
+            'code'      => 'Hello',
+            'name'      => 'World',
+            'synced_at' => now(),
         ]);
 
         $this->assertEquals(10, $website->id);
         $this->assertEquals('Hello', $website->code);
         $this->assertEquals('World', $website->name);
+        $this->assertNotNull($website->synced_at);
     }
 }
