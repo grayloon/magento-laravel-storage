@@ -5,6 +5,7 @@ namespace Grayloon\MagentoStorage\Support;
 use Exception;
 use Grayloon\Magento\Magento;
 use Grayloon\MagentoStorage\Models\MagentoProductAttribute;
+use Grayloon\MagentoStorage\Models\MagentoProductAttributeOption;
 
 class MagentoProductAttributes extends PaginatableMagentoService
 {
@@ -48,7 +49,7 @@ class MagentoProductAttributes extends PaginatableMagentoService
             'synced_at'     => now(),
         ]);
 
-        // $this->syncMagentoAttributeOptions($attribute, $apiAttribute['options]);
+        $this->syncMagentoAttributeOptions($attribute, $apiAttribute['options']);
 
         return $attribute;
     }
@@ -75,5 +76,33 @@ class MagentoProductAttributes extends PaginatableMagentoService
             });
 
         return $labels->first()['label'];
+    }
+
+    /**
+     * Sync the available Product Attribute Options with the Attribute.
+     *
+     * @param  \Grayloon\MagentoStorage\Models\MagentoProductAttribute  $attribute
+     * @param  array  $options
+     * @return \Grayloon\MagentoStorage\Models\MagentoProductAttribute
+     */
+    protected function syncMagentoAttributeOptions($attribute, $options)
+    {
+        if (! $options) {
+            return $attribute;
+        }
+
+        $attribute->options()->delete();
+
+        $options = collect($options)
+            ->reject(fn ($collection) => ! $collection['value'])
+            ->each(function ($option) use ($attribute) {
+                return MagentoProductAttributeOption::create([
+                        'magento_product_attribute_id' => $attribute->id,
+                        'label'                        => $option['label'],
+                        'value'                        => $option['value'],
+                    ]);
+            });
+
+        return $attribute;
     }
 }
