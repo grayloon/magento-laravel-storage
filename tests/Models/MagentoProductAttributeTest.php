@@ -5,7 +5,6 @@ namespace Grayloon\MagentoStorage\Tests;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductAttributeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductAttributeOptionFactory;
 use Grayloon\MagentoStorage\Models\MagentoProductAttribute;
-use Grayloon\MagentoStorage\Models\MagentoProductAttributeOption;
 
 class MagentoProductAttributeTest extends TestCase
 {

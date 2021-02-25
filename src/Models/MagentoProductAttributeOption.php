@@ -27,4 +27,14 @@ class MagentoProductAttributeOption extends Model
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'synced_at'];
+
+    /**
+     * The attribute belongs to Magento Product Attributes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function attribute()
+    {
+        return $this->belongsTo(MagentoProductAttribute::class, 'magento_product_attribute_id');
+    }
 }
