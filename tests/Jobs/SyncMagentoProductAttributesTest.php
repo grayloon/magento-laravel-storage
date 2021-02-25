@@ -13,9 +13,9 @@ class SyncMagentoProductAttributesTest extends TestCase
     public function test_can_work_job()
     {
         Queue::fake([
-            SyncMagentoProductAttributesBatch::class
+            SyncMagentoProductAttributesBatch::class,
         ]);
-        
+
         Http::fake(fn () => Http::response(['total_count' => 1], 200));
 
         SyncMagentoProductAttributes::dispatchNow(1, 1);
