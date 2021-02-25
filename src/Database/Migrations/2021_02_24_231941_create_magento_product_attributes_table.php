@@ -18,7 +18,7 @@ class CreateMagentoProductAttributesTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->integer('position');
-            $table->integer('default_value')->nullable();
+            $table->string('default_value')->nullable();
             $table->string('type');
             $table->timestamps();
             $table->timestamp('synced_at')->useCurrent();

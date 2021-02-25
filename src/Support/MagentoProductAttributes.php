@@ -41,11 +41,11 @@ class MagentoProductAttributes extends PaginatableMagentoService
         }
 
         $attribute = MagentoProductAttribute::updateOrCreate(['id' => $apiAttribute['attribute_id']], [
-            'name'          => $this->resolveAttributeLabel($apiAttribute['frontend_labels'], $apiAttribute['default_frontend_label']),
+            'name'          => $this->resolveAttributeLabel($apiAttribute['frontend_labels'], $apiAttribute['default_frontend_label'] ?? ''),
             'code'          => $apiAttribute['attribute_code'],
             'position'      => $apiAttribute['position'] ?? 0,
-            'default_value' => $apiAttribute['default_value'],
-            'type'          => $apiAttribute['frontend_input'],
+            'default_value' => $apiAttribute['default_value'] ?? '',
+            'type'          => $apiAttribute['frontend_input'] ?? '',
             'synced_at'     => now(),
         ]);
 
