@@ -97,10 +97,10 @@ class MagentoProductAttributes extends PaginatableMagentoService
             ->reject(fn ($collection) => ! $collection['value'])
             ->each(function ($option) use ($attribute) {
                 return MagentoProductAttributeOption::create([
-                        'magento_product_attribute_id' => $attribute->id,
-                        'label'                        => $option['label'],
-                        'value'                        => $option['value'],
-                    ]);
+                    'magento_product_attribute_id' => $attribute->id,
+                    'label'                        => $option['label'],
+                    'value'                        => $option['value'],
+                ]);
             });
 
         return $attribute;

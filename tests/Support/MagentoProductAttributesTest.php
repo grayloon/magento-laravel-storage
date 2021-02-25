@@ -132,7 +132,7 @@ class MagentoProductAttributesTest extends TestCase
                     'label' => 'foo',
                     'value' => '1',
                 ],
-            ]
+            ],
         ]);
 
         $this->assertEquals(1, MagentoProductAttribute::count());
@@ -167,7 +167,7 @@ class MagentoProductAttributesTest extends TestCase
                     'label' => ' ',
                     'value' => '',
                 ],
-            ]
+            ],
         ]);
 
         $this->assertEquals(1, MagentoProductAttribute::count());
@@ -204,7 +204,7 @@ class MagentoProductAttributesTest extends TestCase
                     'label' => $existingOption->label,
                     'value' => $existingOption->value,
                 ],
-            ]
+            ],
         ]);
 
         $this->assertEquals(1, MagentoProductAttributeOption::count());
@@ -240,7 +240,7 @@ class MagentoProductAttributesTest extends TestCase
                     'label' => ' ',
                     'value' => '',
                 ],
-            ]
+            ],
         ]);
 
         $this->assertEquals(0, MagentoProductAttributeOption::count());
