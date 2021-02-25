@@ -14,6 +14,8 @@ class SyncMagentoProductSingleTest extends TestCase
 {
     public function test_sync_product_single_can_sync()
     {
+        config(['magento.default_store_id' => 1]);
+
         Http::fake([
             '*rest/all/V1/products/DMPC001' => Http::response($this->fakeProductResponse(), 200),
         ]);
@@ -37,6 +39,8 @@ class SyncMagentoProductSingleTest extends TestCase
 
     public function test_sync_product_single_fires_synced_event()
     {
+        config(['magento.default_store_id' => 1]);
+
         Event::fake();
         Http::fake([
             '*rest/all/V1/products/DMPC001' => Http::response($this->fakeProductResponse(), 200),
@@ -47,6 +51,21 @@ class SyncMagentoProductSingleTest extends TestCase
         $this->assertEquals(1, MagentoProduct::count());
         Event::assertDispatched(MagentoProductSynced::class);
         Event::assertDispatched(fn (MagentoProductSynced $event) => $event->product->sku === 'DMPC001');
+    }
+
+    public function test_sync_product_single_is_ignored()
+    {
+        config(['magento.default_store_id' => 2]);
+
+        Event::fake();
+        Http::fake([
+            '*rest/all/V1/products/DMPC001' => Http::response($this->fakeProductResponse(), 200),
+        ]);
+
+        SyncMagentoProductSingle::dispatchNow('DMPC001');
+
+        $this->assertEquals(0, MagentoProduct::count());
+        Event::assertNotDispatched(MagentoProductSynced::class);
     }
 
     protected function fakeProductResponse($attributes = null)
@@ -63,7 +82,7 @@ class SyncMagentoProductSingleTest extends TestCase
             'updated_at' => now(),
             'weight'     => 10.00,
             'extension_attributes' => [
-                'website_id' => [1],
+                'website_ids' => [1],
                 'stock_item' => [
                     'item_id' => 1,
                     'product_id' => 1,

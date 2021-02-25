@@ -98,7 +98,9 @@ class MagentoProducts extends PaginatableMagentoService
     {
         $product = MagentoProduct::where('sku', $sku)->first();
 
-        $product->delete();
+        if ($product) {
+            $product->delete();
+        }
 
         return $this;
     }

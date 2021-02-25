@@ -51,8 +51,13 @@ class SyncMagentoProductSingle implements ShouldQueue
             throw new Exception('Error fetching SKU: '.$this->sku.' Error: '.$apiProduct->json()['body'] ?? 'N/A');
         }
 
-        $product = (new MagentoProducts())->updateOrCreateProduct($apiProduct->json());
+        if (in_array(config('magento.default_store_id'), ($apiProduct->json())['extension_attributes']['website_ids'])) {
+            $product = (new MagentoProducts())->updateOrCreateProduct($apiProduct->json());
 
-        event(new MagentoProductSynced($product));
+            event(new MagentoProductSynced($product));
+        } else {
+            // product doesnt exist in given website
+            return (new MagentoProducts())->deleteIfExists($this->sku);
+        }
     }
 }
