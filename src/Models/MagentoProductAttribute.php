@@ -30,4 +30,14 @@ class MagentoProductAttribute extends Model
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'synced_at'];
+
+    /**
+     * The attribute can have many Option attributes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function options()
+    {
+        return $this->hasMany(MagentoProductAttributeOption::class);
+    }
 }

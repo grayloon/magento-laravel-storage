@@ -3,7 +3,9 @@
 namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductAttributeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductAttributeOptionFactory;
 use Grayloon\MagentoStorage\Models\MagentoProductAttribute;
+use Grayloon\MagentoStorage\Models\MagentoProductAttributeOption;
 
 class MagentoProductAttributeTest extends TestCase
 {
@@ -31,5 +33,20 @@ class MagentoProductAttributeTest extends TestCase
         $this->assertEquals('hello', $attribute->default_value);
         $this->assertEquals('world', $attribute->type);
         $this->assertNotNull($attribute->synced_at);
+    }
+
+    public function test_has_many_options()
+    {
+        $attribute = MagentoProductAttributeFactory::new()->create([
+            'id' => 10,
+        ]);
+
+        $options = MagentoProductAttributeOptionFactory::new()->count(5)->create([
+            'magento_product_attribute_id' => $attribute->id,
+        ]);
+
+        $attribute->load('options');
+
+        $this->assertEquals(5, $attribute->options->count());
     }
 }
