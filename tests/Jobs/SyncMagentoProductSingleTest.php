@@ -68,6 +68,25 @@ class SyncMagentoProductSingleTest extends TestCase
         Event::assertNotDispatched(MagentoProductSynced::class);
     }
 
+    public function test_sync_existing_product_is_deleted_on_site_id_change()
+    {
+        config(['magento.default_store_id' => 2]);
+
+        MagentoProductFactory::new()->create([
+            'sku' => 'DMPC001',
+        ]);
+
+        Event::fake();
+        Http::fake([
+            '*rest/all/V1/products/DMPC001' => Http::response($this->fakeProductResponse(), 200),
+        ]);
+
+        SyncMagentoProductSingle::dispatchNow('DMPC001');
+
+        $this->assertEquals(0, MagentoProduct::count());
+        Event::assertNotDispatched(MagentoProductSynced::class);
+    }
+
     protected function fakeProductResponse($attributes = null)
     {
         $product = [
