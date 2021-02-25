@@ -17,7 +17,7 @@ class CreateMagentoProductAttributeOptionsTable extends Migration
             $table->id();
             $table->bigInteger('magento_product_attribute_id');
             $table->string('label');
-            $table->integer('value');
+            $table->string('value');
             $table->timestamps();
             $table->timestamp('synced_at')->useCurrent();
         });
