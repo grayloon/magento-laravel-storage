@@ -16,7 +16,7 @@ class MagentoConfigurableProductOption extends Model
      */
     protected $fillable = [
         'id',
-        'attribute_id',
+        'attribute_type_id',
         'magento_product_id',
         'label',
         'position',
@@ -40,12 +40,12 @@ class MagentoConfigurableProductOption extends Model
     }
 
     /**
-     * The attribute attribute_id belongs to the Magento Product Attribute resource.
+     * The Attribute Type belongs to the Magento Custom Attribute resource.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function attribute()
     {
-        return $this->belongsTo(MagentoProductAttribute::class, 'attribute_id');
+        return $this->belongsTo(MagentoCustomAttributeType::class, 'attribute_type_id', 'attribute_id');
     }
 }

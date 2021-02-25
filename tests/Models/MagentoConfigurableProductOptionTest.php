@@ -3,11 +3,11 @@
 namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductAttributeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
+use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductAttribute;
 
 class MagentoConfigurableProductOptionTest extends TestCase
 {
@@ -20,7 +20,7 @@ class MagentoConfigurableProductOptionTest extends TestCase
     {
         $option = MagentoConfigurableProductOption::create([
             'id'                  => 500,
-            'attribute_id'        => ($attribute = MagentoProductAttributeFactory::new()->create())->id,
+            'attribute_type_id'   => ($type = MagentoCustomAttributeTypeFactory::new()->create())->attribute_id,
             'magento_product_id'  => ($product = MagentoProductFactory::new()->create())->id,
             'label'               => 'foo',
             'position'            => 0,
@@ -28,7 +28,7 @@ class MagentoConfigurableProductOptionTest extends TestCase
 
         $this->assertEquals(1, MagentoConfigurableProductOption::count());
         $this->assertEquals(500, $option->id);
-        $this->assertEquals($attribute->id, $option->attribute_id);
+        $this->assertEquals($type->attribute_id, $option->attribute_type_id);
         $this->assertEquals($product->id, $option->magento_product_id);
         $this->assertEquals('foo', $option->label);
         $this->assertEquals(0, $option->position);
@@ -49,6 +49,6 @@ class MagentoConfigurableProductOptionTest extends TestCase
 
         $option->load('attribute');
 
-        $this->assertInstanceOf(MagentoProductAttribute::class, $option->attribute);
+        $this->assertInstanceOf(MagentoCustomAttributeType::class, $option->attribute);
     }
 }

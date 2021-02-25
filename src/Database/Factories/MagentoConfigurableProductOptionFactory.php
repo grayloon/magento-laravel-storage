@@ -22,7 +22,7 @@ class MagentoConfigurableProductOptionFactory extends Factory
     public function definition()
     {
         return [
-            'attribute_id'        => MagentoProductAttributeFactory::new()->create(),
+            'attribute_type_id'   => MagentoCustomAttributeTypeFactory::new()->create()->attribute_id,
             'magento_product_id'  => MagentoProductFactory::new()->create(),
             'label'               => $this->faker->catchPhrase,
             'position'            => 0,

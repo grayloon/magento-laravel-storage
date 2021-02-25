@@ -15,7 +15,7 @@ class CreateMagentoConfigurableProductOptionsTable extends Migration
     {
         Schema::create('magento_configurable_product_options', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('attribute_id');
+            $table->bigInteger('attribute_type_id');
             $table->bigInteger('magento_product_id');
             $table->string('label');
             $table->integer('position');
