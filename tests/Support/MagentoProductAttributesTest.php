@@ -46,7 +46,7 @@ class MagentoProductAttributesTest extends TestCase
                 [
                     'store_id' => 2,
                     'label'    => 'bar',
-                ]
+                ],
             ],
             'default_frontend_label' => 'foo',
             'attribute_code'         => 'test_attribute',
@@ -80,7 +80,7 @@ class MagentoProductAttributesTest extends TestCase
                 [
                     'store_id' => 2,
                     'label'    => 'bar',
-                ]
+                ],
             ],
             'default_frontend_label' => 'foo',
             'attribute_code'         => 'test_attribute',

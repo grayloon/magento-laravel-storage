@@ -36,7 +36,7 @@ class MagentoProductAttributes extends PaginatableMagentoService
     public function updateOrCreate($apiAttribute)
     {
         if (! $apiAttribute['attribute_id']) {
-            throw new Exception('Magento Product Attribute missing Attribute ID: '. json_encode($apiAttribute));
+            throw new Exception('Magento Product Attribute missing Attribute ID: '.json_encode($apiAttribute));
         }
 
         $attribute = MagentoProductAttribute::updateOrCreate(['id' => $apiAttribute['attribute_id']], [
@@ -47,7 +47,7 @@ class MagentoProductAttributes extends PaginatableMagentoService
             'type'          => $apiAttribute['frontend_input'],
             'synced_at'     => now(),
         ]);
-        
+
         // $this->syncMagentoAttributeOptions($attribute, $apiAttribute['options]);
 
         return $attribute;
