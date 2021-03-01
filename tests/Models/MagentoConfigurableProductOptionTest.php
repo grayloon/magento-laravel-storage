@@ -3,9 +3,11 @@
 namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionValueFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOptionValue;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 
@@ -36,11 +38,17 @@ class MagentoConfigurableProductOptionTest extends TestCase
 
     public function test_belongs_to_product()
     {
-        $option = MagentoConfigurableProductOptionFactory::new()->create();
+        $product = MagentoProductFactory::new()->create([
+            'id' => 123,
+        ]);
+        $option = MagentoConfigurableProductOptionFactory::new()->create([
+            'magento_product_id' => $product->id,
+        ]);
 
         $option->load('product');
 
         $this->assertInstanceOf(MagentoProduct::class, $option->product);
+        $this->assertEquals(123, $option->magento_product_id);
     }
 
     public function test_belongs_to_attribute()
@@ -50,5 +58,20 @@ class MagentoConfigurableProductOptionTest extends TestCase
         $option->load('attribute');
 
         $this->assertInstanceOf(MagentoCustomAttributeType::class, $option->attribute);
+    }
+
+    public function test_has_many_option_values()
+    {
+        $option = MagentoConfigurableProductOptionFactory::new()->create([
+            'id' => 123,
+        ]);
+        MagentoConfigurableProductOptionValueFactory::new()->create([
+            'magento_configurable_product_option_id' => $option->id,
+        ]);
+
+        $option->load('optionValues');
+
+        $this->assertInstanceOf(MagentoConfigurableProductOptionValue::class, $option->optionValues->first());
+        $this->assertEquals(123, $option->optionValues->first()->magento_configurable_product_option_id);
     }
 }

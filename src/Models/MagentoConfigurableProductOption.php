@@ -2,6 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Models;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionValueFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -47,5 +48,15 @@ class MagentoConfigurableProductOption extends Model
     public function attribute()
     {
         return $this->belongsTo(MagentoCustomAttributeType::class, 'attribute_type_id', 'attribute_id');
+    }
+
+    /**
+     * A Configurable Product Option can have many configurable values.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function optionValues()
+    {
+        return $this->hasMany(MagentoConfigurableProductOptionValue::class, 'magento_configurable_product_option_id', 'id');
     }
 }

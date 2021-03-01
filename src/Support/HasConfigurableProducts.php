@@ -10,10 +10,10 @@ trait HasConfigurableProducts
      * The options with their associated attribute types.
      *
      * @param \Grayloon\MagentoStorage\Models\MagentoProduct
-     * @return void
+     * @return \Illuminate\Support\Collection
      */
     protected function resolveConfigurableOptions($configurableProduct)
     {
-        $configurableProduct->load('configurableLinks', 'configurableLinks.customAttributes', )
+        $configurableProduct->load('configurableLinks', 'configurableLinks.customAttributes', 'configurableProductOptions', '')
     }
 }
