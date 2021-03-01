@@ -18,7 +18,7 @@ class MagentoConfigurableProductOptionValueTest extends TestCase
 
     public function test_is_fillable()
     {
-        $id =  MagentoConfigurableProductOptionFactory::new()->create()->id;
+        $id = MagentoConfigurableProductOptionFactory::new()->create()->id;
         $value = MagentoConfigurableProductOptionValue::create([
             'magento_configurable_product_option_id' => $id,
             'value' => 'foo',
@@ -79,8 +79,8 @@ class MagentoConfigurableProductOptionValueTest extends TestCase
                 [
                     'value' => '200',
                     'label' => 'foo',
-                ]
-            ]
+                ],
+            ],
         ]);
         MagentoConfigurableProductOptionFactory::new()->create([
             'id' => 125,

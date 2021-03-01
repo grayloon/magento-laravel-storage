@@ -18,7 +18,7 @@ class MagentoConfigurableProductLink extends Model
         'configurable_product_id',
         'product_id',
     ];
-    
+
     /**
      * The attributes that should be mutated to dates.
      *

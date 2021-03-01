@@ -17,7 +17,7 @@ class MagentoConfigurableProductOptionValue extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::saving(function ($optionValue) {
             $type = $optionValue->customAttributeType()->first();
 

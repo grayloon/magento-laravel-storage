@@ -1,4 +1,5 @@
 <?php
+
 namespace Grayloon\MagentoStorage\Database\Factories;
 
 use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOptionValue;
