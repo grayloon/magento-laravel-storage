@@ -110,6 +110,16 @@ class MagentoProduct extends Model
     }
 
     /**
+     * A Configurable Product can have many configurable Product Type Options.
+     *
+     * @return void
+     */
+    public function configurableProductOptions()
+    {
+        return $this->hasMany(MagentoConfigurableProductOption::class, 'magento_product_id');
+    }
+
+    /**
      * The Configurable Product Links that belong to the Magento Configurable Product.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough

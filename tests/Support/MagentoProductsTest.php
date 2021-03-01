@@ -197,24 +197,6 @@ class MagentoProductsTest extends TestCase
         $this->assertEquals('3', $minQty->value);
     }
 
-    public function test_configurable_links_has_many_products_through()
-    {
-        $configurableProduct = MagentoProductFactory::new()->create();
-        $product = MagentoProductFactory::new()->create([
-            'id' => 123,
-        ]);
-
-        $link = MagentoConfigurableProductLinkFactory::new()->create([
-            'configurable_product_id' => $configurableProduct->id,
-            'product_id' => $product->id,
-        ]);
-
-        $query = $configurableProduct->load('configurableLinks');
-
-        $this->assertInstanceOf(MagentoProduct::class, $query->configurableLinks->first());
-        $this->assertEquals(123, $query->configurableLinks->first()->id);
-    }
-
     protected function fakeProduct($attributes = null)
     {
         $product = [
