@@ -3,7 +3,6 @@
 namespace Grayloon\MagentoStorage\Tests\Support;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductLinkFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;

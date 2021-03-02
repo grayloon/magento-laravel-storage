@@ -2,7 +2,6 @@
 
 namespace Grayloon\MagentoStorage\Models;
 
-use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionValueFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

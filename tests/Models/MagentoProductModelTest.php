@@ -2,18 +2,18 @@
 
 namespace Grayloon\MagentoStorage\Tests;
 
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoCategory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
-use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductLinkFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
+use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
 
 class MagentoProductModelTest extends TestCase
 {
