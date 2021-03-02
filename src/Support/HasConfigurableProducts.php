@@ -60,7 +60,6 @@ trait HasConfigurableProducts
             }
         }
 
-
         return $configurableProduct;
     }
 
@@ -70,7 +69,7 @@ trait HasConfigurableProducts
      * @param \Grayloon\MagentoStorage\Models\MagentoProduct  $product
      * @return bool
      */
-    protected function productBelongsToConfigurableProduct($product) 
+    protected function productBelongsToConfigurableProduct($product)
     {
         return MagentoConfigurableProductLink::where('product_id', $product->id)->exists();
     }
@@ -81,7 +80,7 @@ trait HasConfigurableProducts
      * @param \Grayloon\MagentoStorage\Models\MagentoProduct  $product
      * @return \Grayloon\MagentoStorage\Models\MagentoProduct
      */
-    protected function getConfigurableProductParent($product) 
+    protected function getConfigurableProductParent($product)
     {
         return MagentoProduct::whereHas('configurableLinks', fn ($query) => $query->where('product_id', $product->id))->first();
     }
