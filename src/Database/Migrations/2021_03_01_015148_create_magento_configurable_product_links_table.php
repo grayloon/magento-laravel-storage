@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMagentoProductAttributeOptionsTable extends Migration
+class CreateMagentoConfigurableProductLinksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateMagentoProductAttributeOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('magento_product_attribute_options', function (Blueprint $table) {
+        Schema::create('magento_configurable_product_links', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('magento_product_attribute_id');
-            $table->string('label');
-            $table->string('value');
+            $table->unsignedBigInteger('configurable_product_id');
+            $table->unsignedBigInteger('product_id');
             $table->timestamps();
             $table->timestamp('synced_at')->useCurrent();
         });
@@ -30,6 +29,6 @@ class CreateMagentoProductAttributeOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('magento_product_attribute_options');
+        Schema::dropIfExists('magento_configurable_product_links');
     }
 }

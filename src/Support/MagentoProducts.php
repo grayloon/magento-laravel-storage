@@ -3,6 +3,9 @@
 namespace Grayloon\MagentoStorage\Support;
 
 use Grayloon\Magento\Magento;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductLink;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOptionValue;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Illuminate\Support\Str;
@@ -54,6 +57,10 @@ class MagentoProducts extends PaginatableMagentoService
         $this->syncProductLinks($apiProduct['product_links'], $product);
         $this->downloadProductImages($apiProduct['media_gallery_entries'] ?? [], $product);
         $this->syncStockItemAsAttributes($apiProduct['extension_attributes']['stock_item'] ?? [], $product);
+
+        if ($product->type === 'configurable') {
+            $this->syncConfigurableProductAttributes($product, $apiProduct['extension_attributes']['configurable_product_links'] ?? [], $apiProduct['extension_attributes']['configurable_product_options'] ?? []);
+        }
 
         return $product;
     }
@@ -119,5 +126,47 @@ class MagentoProducts extends PaginatableMagentoService
         }
 
         return $this;
+    }
+
+    /**
+     * Sync the configurable product attributes with the database.
+     *
+     * @param  \Grayloon\MagentoStorage\Models\MagentoProduct $product
+     * @param  array  $links
+     * @param  array  $options
+     * @return void
+     */
+    protected function syncConfigurableProductAttributes($product, $links, $options)
+    {
+        // remove any existing relationships before attaching new one attributes.
+        MagentoConfigurableProductLink::where('configurable_product_id', $product->id)->delete();
+        MagentoConfigurableProductOption::where('magento_product_id', $product->id)->delete();
+
+        // sync the incoming request
+        foreach ($links as $link) {
+            MagentoConfigurableProductLink::create([
+                'configurable_product_id' => $product->id,
+                'product_id'              => $link,
+                'synced_at'               => now(),
+            ]);
+        }
+
+        foreach ($options as $option) {
+            $createdOption = MagentoConfigurableProductOption::create([
+                'attribute_type_id'  => $option['attribute_id'],
+                'label'              => $option['label'],
+                'position'           => $option['position'],
+                'magento_product_id' => $product->id,
+            ]);
+
+            if ($option['values']) {
+                foreach ($option['values'] as $optionValue) {
+                    MagentoConfigurableProductOptionValue::create([
+                        'magento_configurable_product_option_id' => $createdOption->id,
+                        'value' => $optionValue['value_index'],
+                    ]);
+                }
+            }
+        }
     }
 }

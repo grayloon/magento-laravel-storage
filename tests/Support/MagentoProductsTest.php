@@ -3,7 +3,12 @@
 namespace Grayloon\MagentoStorage\Tests\Support;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductLinkFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductLink;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOptionValue;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttribute;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
@@ -196,6 +201,44 @@ class MagentoProductsTest extends TestCase
         $this->assertEquals('3', $minQty->value);
     }
 
+    /** @test */
+    public function it_can_sync_configurable_product()
+    {
+        Queue::fake();
+        MagentoCategoryFactory::new()->create();
+
+        $fakeConfigurableProduct = $this->fakeConfigurableProduct();
+
+        $magentoProducts = new MagentoProducts();
+        $magentoProducts->updateOrCreateProduct($fakeConfigurableProduct['product']);
+
+        $this->assertEquals(1, MagentoConfigurableProductLink::count());
+        $this->assertEquals(1, MagentoConfigurableProductOption::count());
+        $this->assertEquals(1, MagentoConfigurableProductOptionValue::count());
+    }
+
+    /** @test */
+    public function it_removes_old_configurable_product_data()
+    {
+        Queue::fake();
+        MagentoCategoryFactory::new()->create();
+        $configurableProduct = MagentoProductFactory::new()->create([
+            'id' => 1,
+            'sku' => 'DMPC001',
+        ]);
+        $link = MagentoConfigurableProductLinkFactory::new()->create([
+            'configurable_product_id' => $configurableProduct->id,
+        ]);
+
+        $fakeConfigurableProduct = $this->fakeConfigurableProduct();
+
+        $magentoProducts = new MagentoProducts();
+        $magentoProducts->updateOrCreateProduct($fakeConfigurableProduct['product']);
+
+        $this->assertEquals(1, MagentoConfigurableProductLink::count());
+        $this->assertNotEquals($link->id, MagentoConfigurableProductLink::first()->id);
+    }
+
     protected function fakeProduct($attributes = null)
     {
         $product = [
@@ -288,5 +331,119 @@ class MagentoProductsTest extends TestCase
         }
 
         return $product;
+    }
+
+    protected function fakeConfigurableProduct()
+    {
+        $link = MagentoProductFactory::new()->create();
+        $type = MagentoCustomAttributeTypeFactory::new()->create();
+
+        $product = [
+            'id'         => '1',
+            'name'       => 'Dunder Mifflin Paper',
+            'sku'        => 'DMPC001',
+            'price'      => 19.99,
+            'status'     => '1',
+            'visibility' => '1',
+            'type_id'    => 'configurable',
+            'created_at' => now(),
+            'updated_at' => now(),
+            'weight'     => 10.00,
+            'extension_attributes' => [
+                'website_id' => [1],
+                'stock_item' => [
+                    'item_id' => 1,
+                    'product_id' => 1,
+                    'stock_id' => 1,
+                    'qty' => 250,
+                    'is_in_stock' => true,
+                    'is_qty_decimal' => false,
+                    'show_default_notification_message' => false,
+                    'use_config_min_qty' => true,
+                    'min_qty' => 3,
+                    'use_config_min_sale_qty' => 1,
+                    'min_sale_qty' => 1,
+                    'use_config_max_sale_qty' => true,
+                    'max_sale_qty' => 10000,
+                    'use_config_backorders' => true,
+                    'backorders' => 0,
+                    'use_config_notify_stock_qty' => true,
+                    'notify_stock_qty' => 0,
+                    'use_config_qty_increments' => true,
+                    'qty_increments' => 0,
+                    'use_config_enable_qty_inc' => true,
+                    'enable_qty_increments' => false,
+                    'use_config_manage_stock' => false,
+                    'manage_stock' => false,
+                    'low_stock_date' => null,
+                    'is_decimal_divided' => false,
+                    'stock_status_changed_auto' => 0,
+                    'extension_attributes' => [],
+                ],
+                'configurable_product_options' => [
+                    [
+                        'id' => 1,
+                        'attribute_id' => $type->attribute_id,
+                        'label' => 'Paper',
+                        'position' => 0,
+                        'product_id' => '1',
+                        'values' => [
+                            [
+                                'value_index' => 1,
+                            ],
+                        ],
+                    ],
+                ],
+                'configurable_product_links' => [
+                    $link->id,
+                ],
+            ],
+            'product_links' => [
+                [
+                    'sku' => 'DMPC001',
+                    'link_type' => 'related',
+                    'linked_product_sku' => 'bar',
+                    'linked_product_type' => 'simple',
+                    'position' => 0,
+                ],
+            ],
+            'media_gallery_entries' => [
+                [
+                    'id' => 1,
+                    'media_type' => 'image',
+                    'label' => null,
+                    'position' => 1,
+                    'disabled' => false,
+                    'types' => [
+                        'image',
+                        'small_image',
+                        'thumbnail',
+                    ],
+                    'file' => '/p/paper.jpg',
+                ],
+            ],
+            'custom_attributes' => [
+                [
+                    'attribute_code' => 'warehouse_id',
+                    'value'          => '1',
+                ],
+                [
+                    'attribute_code' => 'url_key',
+                    'value'          => 'paper-and-office-supplies',
+                ],
+                [
+                    'attribute_code' => 'category_ids',
+                    'value'          => [
+                        '1',
+                    ],
+                ],
+            ],
+        ];
+
+        return collect([
+            'product' => $product,
+            'link'    => $link,
+            'type'    => $type,
+        ]);
     }
 }

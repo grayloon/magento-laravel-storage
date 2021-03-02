@@ -23,7 +23,9 @@ class MagentoCustomAttributeTypeFactory extends Factory
     {
         return [
             'name'         => $this->faker->catchPhrase,
+            'attribute_id' => $this->faker->randomNumber(),
             'display_name' => $this->faker->catchPhrase,
+            'attribute_id' => rand(1, 100),
             'synced_at'    => now(),
         ];
     }

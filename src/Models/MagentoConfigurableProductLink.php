@@ -5,7 +5,7 @@ namespace Grayloon\MagentoStorage\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MagentoProductAttribute extends Model
+class MagentoConfigurableProductLink extends Model
 {
     use HasFactory;
 
@@ -15,13 +15,8 @@ class MagentoProductAttribute extends Model
      * @var array
      */
     protected $fillable = [
-        'id',
-        'name',
-        'code',
-        'position',
-        'default_value',
-        'type',
-        'synced_at',
+        'configurable_product_id',
+        'product_id',
     ];
 
     /**
@@ -30,14 +25,4 @@ class MagentoProductAttribute extends Model
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'synced_at'];
-
-    /**
-     * The attribute can have many Option attributes.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function options()
-    {
-        return $this->hasMany(MagentoProductAttributeOption::class);
-    }
 }

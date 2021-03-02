@@ -45,13 +45,39 @@ class UpdateProductAttributeGroup implements ShouldQueue
         if ($api->ok()) {
             $response = $api->json();
             $this->type->update([
-                'display_name' => $response['default_frontend_label'] ?? $this->type->display_name,
+                'display_name' => $this->resolveAttributeLabel($response['frontend_labels'], $response['default_frontend_label'] ?? $this->type->display_name),
                 'options'      => $response['options'] ?? [],
                 'synced_at'    => now(),
                 'is_queued'    => false,
+                'attribute_id' => $response['attribute_id'],
+                'type'         => $response['frontend_input'] ?? '',
             ]);
 
             $this->updateCustomAttributeTypeValues($this->type);
         }
+    }
+
+    /**
+     * Resolve the Attribute label by the associated assigned website.
+     *
+     * @param  array   $availableLabels
+     * @param  string  $defaultLabel
+     * @return string
+     */
+    public function resolveAttributeLabel($availableLabels, $defaultLabel)
+    {
+        if (! $availableLabels) {
+            return $defaultLabel;
+        }
+
+        $labels = collect($availableLabels)
+            ->when(config('magento.default_store_id'), function ($collection) {
+                return $collection->filter(fn ($label) => $label['store_id'] == config('magento.default_store_id'));
+            })
+            ->when(! config('magento.default_store_id') && $defaultLabel, function ($collection) use ($defaultLabel) {
+                return $collection->filter(fn ($label) => $label['label'] === $defaultLabel);
+            });
+
+        return $labels->first()['label'];
     }
 }

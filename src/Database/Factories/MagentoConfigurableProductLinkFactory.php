@@ -2,17 +2,17 @@
 
 namespace Grayloon\MagentoStorage\Database\Factories;
 
-use Grayloon\MagentoStorage\Models\MagentoProductAttribute;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductLink;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class MagentoProductAttributeFactory extends Factory
+class MagentoConfigurableProductLinkFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = MagentoProductAttribute::class;
+    protected $model = MagentoConfigurableProductLink::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,9 @@ class MagentoProductAttributeFactory extends Factory
     public function definition()
     {
         return [
-            'name'     => $this->faker->catchPhrase,
-            'code'     => $this->faker->slug,
-            'position' => $this->faker->randomNumber(),
-            'type'     => 'select',
+            'configurable_product_id' => MagentoProductFactory::new()->create(),
+            'product_id' => MagentoProductFactory::new()->create(),
+            'synced_at' => now(),
         ];
     }
 }

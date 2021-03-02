@@ -3,6 +3,8 @@
 namespace Grayloon\MagentoStorage\Tests;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductLinkFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
@@ -10,6 +12,7 @@ use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 
 class MagentoProductModelTest extends TestCase
@@ -338,5 +341,35 @@ class MagentoProductModelTest extends TestCase
         ]);
 
         $this->assertEquals('9.99', $product->load('customAttributes')->salePrice());
+    }
+
+    public function test_configurable_links_has_many_products_through()
+    {
+        $configurableProduct = MagentoProductFactory::new()->create();
+        $product = MagentoProductFactory::new()->create([
+            'id' => 123,
+        ]);
+
+        $link = MagentoConfigurableProductLinkFactory::new()->create([
+            'configurable_product_id' => $configurableProduct->id,
+            'product_id' => $product->id,
+        ]);
+
+        $query = $configurableProduct->load('configurableLinks');
+
+        $this->assertInstanceOf(MagentoProduct::class, $query->configurableLinks->first());
+        $this->assertEquals(123, $query->configurableLinks->first()->id);
+    }
+
+    public function test_has_many_configurable_product_options()
+    {
+        $product = MagentoProductFactory::new()->create();
+        MagentoConfigurableProductOptionFactory::new()->create([
+            'magento_product_id' => $product->id,
+        ]);
+
+        $product->load('configurableProductOptions');
+
+        $this->assertInstanceOf(MagentoConfigurableProductOption::class, $product->configurableProductOptions->first());
     }
 }
