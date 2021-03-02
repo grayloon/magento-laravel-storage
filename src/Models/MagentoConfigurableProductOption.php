@@ -17,7 +17,7 @@ class MagentoConfigurableProductOption extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::deleting(fn ($option) => $option->optionValues()->delete());
     }
 

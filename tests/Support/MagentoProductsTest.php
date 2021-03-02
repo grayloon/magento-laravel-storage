@@ -238,7 +238,7 @@ class MagentoProductsTest extends TestCase
         $this->assertEquals(1, MagentoConfigurableProductLink::count());
         $this->assertNotEquals($link->id, MagentoConfigurableProductLink::first()->id);
     }
-    
+
     protected function fakeProduct($attributes = null)
     {
         $product = [
@@ -337,7 +337,7 @@ class MagentoProductsTest extends TestCase
     {
         $link = MagentoProductFactory::new()->create();
         $type = MagentoCustomAttributeTypeFactory::new()->create();
-        
+
         $product = [
             'id'         => '1',
             'name'       => 'Dunder Mifflin Paper',
@@ -392,7 +392,7 @@ class MagentoProductsTest extends TestCase
                                 'value_index' => 1,
                             ],
                         ],
-                    ]
+                    ],
                 ],
                 'configurable_product_links' => [
                     $link->id,
