@@ -10,6 +10,18 @@ class MagentoConfigurableProductOption extends Model
     use HasFactory;
 
     /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::deleting(fn ($option) => $option->optionValues()->delete());
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

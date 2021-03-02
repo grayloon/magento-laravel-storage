@@ -74,4 +74,16 @@ class MagentoConfigurableProductOptionTest extends TestCase
         $this->assertInstanceOf(MagentoConfigurableProductOptionValue::class, $option->optionValues->first());
         $this->assertEquals(123, $option->optionValues->first()->magento_configurable_product_option_id);
     }
+
+    public function test_it_deletes_option_values_on_option_delete()
+    {
+        $option = MagentoConfigurableProductOptionFactory::new()->create();
+        $optionValue = MagentoConfigurableProductOptionValueFactory::new()->create([
+            'magento_configurable_product_option_id' => $option->id,
+        ]);
+
+        $option->delete();
+
+        $this->assertDeleted($optionValue);
+    }
 }
