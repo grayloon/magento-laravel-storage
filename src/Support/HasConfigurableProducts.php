@@ -2,6 +2,9 @@
 
 namespace Grayloon\MagentoStorage\Support;
 
+use Grayloon\MagentoStorage\Models\MagentoConfigurableProductLink;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
+
 trait HasConfigurableProducts
 {
     /**
@@ -59,5 +62,27 @@ trait HasConfigurableProducts
 
 
         return $configurableProduct;
+    }
+
+    /**
+     * Determine if a product belongs to a configurable product.
+     *
+     * @param \Grayloon\MagentoStorage\Models\MagentoProduct  $product
+     * @return bool
+     */
+    protected function productBelongsToConfigurableProduct($product) 
+    {
+        return MagentoConfigurableProductLink::where('product_id', $product->id)->exists();
+    }
+
+    /**
+     * Retrieve the configurable product to the provided product.
+     *
+     * @param \Grayloon\MagentoStorage\Models\MagentoProduct  $product
+     * @return \Grayloon\MagentoStorage\Models\MagentoProduct
+     */
+    protected function getConfigurableProductParent($product) 
+    {
+        return MagentoProduct::whereHas('configurableLinks', fn ($query) => $query->where('product_id', $product->id))->first();
     }
 }

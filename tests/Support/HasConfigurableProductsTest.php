@@ -232,4 +232,55 @@ class HasConfigurableProductsTest extends TestCase
 
         $this->assertTrue($configurableProduct->configurableProductOptions->isEmpty());
     }
+
+    /** @test */
+    public function that_a_normal_product_that_product_belongs_to_configurable_product_is_false()
+    {
+        $this->assertFalse(
+            $this->productBelongsToConfigurableProduct(MagentoProductFactory::new()->create())
+        );
+    }
+
+    /** @test */
+    public function that_a_product_that_has_configurable_product_belongs_to_configurable_product_is_true()
+    {
+        $product = MagentoProductFactory::new()->create();
+        $configurableProduct = MagentoProductFactory::new()->create();
+        MagentoConfigurableProductLinkFactory::new()->create([
+            'configurable_product_id' => $configurableProduct->id,
+            'product_id' => $product->id,
+        ]);
+
+        $this->assertTrue(
+            $this->productBelongsToConfigurableProduct($product)
+        );
+    }
+
+    /** @test */
+    public function that_product_with_configurable_parent_can_get_parent()
+    {
+        $product = MagentoProductFactory::new()->create();
+        $configurableProduct = MagentoProductFactory::new()->create();
+        MagentoConfigurableProductLinkFactory::new()->create([
+            'configurable_product_id' => $configurableProduct->id,
+            'product_id' => $product->id,
+        ]);
+
+        $this->assertEquals($configurableProduct->id, $this->getConfigurableProductParent($product)->id);
+    }
+
+    /** @test */
+    public function that_product_without_configurable_parent_returns_empty()
+    {
+        $product = MagentoProductFactory::new()->create();
+        $configurableProduct = MagentoProductFactory::new()->create();
+        MagentoConfigurableProductLinkFactory::new()->create([
+            'configurable_product_id' => $configurableProduct->id,
+            'product_id' => $product->id,
+        ]);
+
+        $this->assertTrue(
+            $this->productBelongsToConfigurableProduct($product)
+        );
+    }
 }
