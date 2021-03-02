@@ -27,7 +27,7 @@ trait HasConfigurableProducts
         foreach ($configurableProduct->configurableProductOptions as $optionKey => $productOption) {
             $optionHasProduct = false;
             if ($productOption->optionValues->isEmpty()) {
-                $configurableProduct->configurableProductOptions->forget($productOption);
+                $configurableProduct->configurableProductOptions->forget($optionKey);
 
                 continue;
             }
@@ -39,17 +39,21 @@ trait HasConfigurableProducts
                     });
 
                 if ($matchedProduct->isEmpty()) {
-                    $productOption->optionValues->forget($optionValue);
+                    $configurableProduct->configurableProductOptions->where('id', $productOption->id)
+                        ->first()
+                        ->optionValues
+                        ->forget($valueKey);
+
                     continue;
                 } else {
-                    // Attach relationship 
+                    // Attach relationship
                     $configurableProduct->configurableProductOptions[$optionKey]->optionValues[$valueKey]->product = $matchedProduct->first();
                     $optionHasProduct = true;
                 }
             }
 
             if (! $optionHasProduct) {
-                $configurableProduct->configurableProductOptions->forget($productOption);
+                $configurableProduct->configurableProductOptions->forget($optionKey);
             }
         }
 
