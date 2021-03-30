@@ -42,13 +42,12 @@ trait HasProductLinks
             return WaitForLinkedProductSku::dispatch($product, $link);
         }
 
-        MagentoProductLink::updateOrCreate([
+        MagentoProductLink::create([
             'product_id'         => $product->id,
             'related_product_id' => $productLink->id,
-        ], [
-            'link_type'   => $link['link_type'],
-            'position'    => $link['position'],
-            'synced_at'   => now(),
+            'link_type'          => $link['link_type'],
+            'position'           => $link['position'],
+            'synced_at'          => now(),
         ]);
     }
 }
