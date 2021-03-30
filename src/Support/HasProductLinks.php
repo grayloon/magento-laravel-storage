@@ -17,6 +17,9 @@ trait HasProductLinks
      */
     protected function syncProductLinks($links, $product)
     {
+        MagentoProductLink::where('product_id', $product->id)
+            ->delete();
+
         foreach ($links as $link) {
             $this->updateProductLink($link, $product);
         }
@@ -39,13 +42,12 @@ trait HasProductLinks
             return WaitForLinkedProductSku::dispatch($product, $link);
         }
 
-        MagentoProductLink::updateOrCreate([
+        MagentoProductLink::create([
             'product_id'         => $product->id,
             'related_product_id' => $productLink->id,
-        ], [
-            'link_type'   => $link['link_type'],
-            'position'    => $link['position'],
-            'synced_at'   => now(),
+            'link_type'          => $link['link_type'],
+            'position'           => $link['position'],
+            'synced_at'          => now(),
         ]);
     }
 }
