@@ -8,6 +8,7 @@ use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Support\MagentoProducts;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -31,18 +32,11 @@ class WaitForLinkedProductSku implements ShouldQueue
     public $response = [];
 
     /**
-     * The current number of attempts we have tried to check if the product exists.
+     * The number of times the job may be attempted.
      *
      * @var int
      */
-    public $attempts = 1;
-
-    /**
-     * The maximum number of attempts to stop.
-     *
-     * @var int
-     */
-    protected $maxAttempts = 3;
+    public $tries = 3;
 
     /**
      * Create a new job instance.
@@ -50,11 +44,10 @@ class WaitForLinkedProductSku implements ShouldQueue
      * @param  \Grayloon\Magento\Models\MagentoProduct  $product
      * @return void
      */
-    public function __construct(MagentoProduct $product, $response, $attempts = 1)
+    public function __construct(MagentoProduct $product, $response)
     {
         $this->product = $product;
         $this->response = $response;
-        $this->attempts = $attempts;
     }
 
     /**
@@ -67,12 +60,7 @@ class WaitForLinkedProductSku implements ShouldQueue
         $checkSku = MagentoProduct::where('sku', $this->response['linked_product_sku'])->first();
 
         if (! $checkSku) {
-            if ($this->attempts >= $this->maxAttempts) {
-                throw new Exception('Failed to find a product id with the Sku '.$this->response['linked_product_sku'].
-                    ' to link with product id '.$this->product->id.' after '.$this->attempts.' attempts.');
-            }
-
-            return $this->dispatch($this->product, $this->response, $this->attempts++);
+            throw new ModelNotFoundException("Failed to find a find product {$this->response['linked_product_sku']} to link with product {$this->product->sku}");
         }
 
         (new MagentoProducts())->updateProductLink($this->response, $this->product);
