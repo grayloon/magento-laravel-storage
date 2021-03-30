@@ -91,6 +91,21 @@ class HasProductLinkTest extends TestCase
 
         $this->assertEquals(0, MagentoProductLink::count());
     }
+
+    /** @test */
+    public function it_removes_old_product_links()
+    {
+        $product = MagentoProductFactory::new()->create([
+            'id' => 5,
+        ]);
+        $link = MagentoProductLinkFactory::new()->create([
+            'product_id' => $product->id,
+        ]);
+
+        (new FakeProductLinksSupportingTest)->exposedSyncProductLinks([], $product);
+
+        $this->assertEquals(0, MagentoProductLink::count());
+    }
 }
 
 class FakeProductLinksSupportingTest

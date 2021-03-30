@@ -17,6 +17,9 @@ trait HasProductLinks
      */
     protected function syncProductLinks($links, $product)
     {
+        MagentoProductLink::where('product_id', $product->id)
+            ->delete();
+
         foreach ($links as $link) {
             $this->updateProductLink($link, $product);
         }
