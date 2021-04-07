@@ -2,6 +2,7 @@
 
 namespace Grayloon\MagentoStorage\Tests\Support;
 
+use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
 use Grayloon\MagentoStorage\Jobs\DownloadMagentoCategoryImage;
 use Grayloon\MagentoStorage\Jobs\UpdateProductAttributeGroup;
@@ -273,5 +274,204 @@ class MagentoCategoriesTest extends TestCase
         Queue::assertPushed(DownloadMagentoCategoryImage::class);
         Queue::assertPushed(DownloadMagentoCategoryImage::class, fn ($job) => $job->path === 'pub/media/catalog/category/foo.jpg');
         Queue::assertPushed(DownloadMagentoCategoryImage::class, fn ($job) => $job->category->id === $category->id);
+    }
+
+    /** @test */
+    public function it_deletes_old_category()
+    {
+        Queue::fake();
+
+        $category = MagentoCategoryFactory::new()->create([
+            'id' => 2,
+        ]);
+        
+        $categories = [
+            [
+                'id'         => '1',
+                'parent_id'  => 0,
+                'name'       => 'Root Catalog',
+                'is_active'  => true,
+                'position'   => 0,
+                'level'      => 0,
+                'children'   => '2',
+                'created_at' => '2014-04-04 14:17:29',
+                'updated_at' => '2014-04-04 14:17:29',
+                'path'       => '1',
+                'available_sort_by' => [],
+                'include_in_menu' =>  true,
+                'custom_attributes' => [
+                    [
+                        'attribute_code' => 'path',
+                        'value' => '1',
+                    ],
+                    [
+                        'attribute_code' => 'url_path',
+                        'value' => 'foo/bar',
+                    ],
+                    [
+                        'attribute_code' => 'children_count',
+                        'value' => '124',
+                    ],
+                    [
+                        'attribute_code' => 'image',
+                        'value' => 'pub/media/catalog/category/foo.jpg',
+                    ],
+                ],
+            ],
+        ];
+
+        (new MagentoCategories())->updateCategories($categories);
+
+        $this->assertEquals(1, MagentoCategory::count());
+        $this->assertEquals(2, MagentoCategory::first()->id);
+        $this->assertDeleted($category);
+    }
+
+    /** @test */
+    public function it_ignores_non_root_config_level_categories()
+    {
+        Queue::fake();
+        
+        putenv('MAGENTO_DEFAULT_CATEGORY=3');
+        
+        $category = MagentoCategoryFactory::new()->create([
+            'id' => 2,
+        ]);
+        
+        $categories = [
+            [
+                'id'         => '1',
+                'parent_id'  => 0,
+                'name'       => 'Root Catalog',
+                'is_active'  => true,
+                'position'   => 0,
+                'level'      => 0,
+                'children'   => '2',
+                'created_at' => '2014-04-04 14:17:29',
+                'updated_at' => '2014-04-04 14:17:29',
+                'path'       => '1',
+                'available_sort_by' => [],
+                'include_in_menu' =>  true,
+                'custom_attributes' => [
+                    [
+                        'attribute_code' => 'path',
+                        'value' => '1',
+                    ],
+                    [
+                        'attribute_code' => 'url_path',
+                        'value' => 'foo/bar',
+                    ],
+                    [
+                        'attribute_code' => 'children_count',
+                        'value' => '124',
+                    ],
+                    [
+                        'attribute_code' => 'image',
+                        'value' => 'pub/media/catalog/category/foo.jpg',
+                    ],
+                ],
+            ],
+        ];
+
+        (new MagentoCategories())->updateCategories($categories);
+
+        $this->assertEquals(0, MagentoCategory::count());
+        $this->assertDeleted($category);
+    }
+
+    /** @test */
+    public function it_allows_root_level_category()
+    {
+        Queue::fake();
+        
+        putenv('MAGENTO_DEFAULT_CATEGORY=2');
+        
+        $categories = [
+            [
+                'id'         => '2',
+                'parent_id'  => 0,
+                'name'       => 'Root Catalog',
+                'is_active'  => true,
+                'position'   => 0,
+                'level'      => 0,
+                'children'   => '2',
+                'created_at' => '2014-04-04 14:17:29',
+                'updated_at' => '2014-04-04 14:17:29',
+                'path'       => '1',
+                'available_sort_by' => [],
+                'include_in_menu' =>  true,
+                'custom_attributes' => [
+                    [
+                        'attribute_code' => 'path',
+                        'value' => '1',
+                    ],
+                    [
+                        'attribute_code' => 'url_path',
+                        'value' => 'foo/bar',
+                    ],
+                    [
+                        'attribute_code' => 'children_count',
+                        'value' => '124',
+                    ],
+                    [
+                        'attribute_code' => 'image',
+                        'value' => 'pub/media/catalog/category/foo.jpg',
+                    ],
+                ],
+            ],
+        ];
+
+        (new MagentoCategories())->updateCategories($categories);
+
+        $this->assertEquals(1, MagentoCategory::count());
+        $this->assertEquals(2, MagentoCategory::first()->id);
+    }
+
+    /** @test */
+    public function it_allows_nested_level_category()
+    {
+        Queue::fake();
+        
+        putenv('MAGENTO_DEFAULT_CATEGORY=2');
+        
+        $categories = [
+            [
+                'id'         => '10',
+                'parent_id'  => 0,
+                'name'       => 'Root Catalog',
+                'is_active'  => true,
+                'position'   => 0,
+                'level'      => 0,
+                'children'   => '2',
+                'created_at' => '2014-04-04 14:17:29',
+                'updated_at' => '2014-04-04 14:17:29',
+                'path'       => '1/2/9/10',
+                'available_sort_by' => [],
+                'include_in_menu' =>  true,
+                'custom_attributes' => [
+                    [
+                        'attribute_code' => 'path',
+                        'value' => '1',
+                    ],
+                    [
+                        'attribute_code' => 'url_path',
+                        'value' => 'foo/bar',
+                    ],
+                    [
+                        'attribute_code' => 'children_count',
+                        'value' => '124',
+                    ],
+                    [
+                        'attribute_code' => 'image',
+                        'value' => 'pub/media/catalog/category/foo.jpg',
+                    ],
+                ],
+            ],
+        ];
+
+        (new MagentoCategories())->updateCategories($categories);
+
+        $this->assertEquals(1, MagentoCategory::count());
+        $this->assertEquals(10, MagentoCategory::first()->id);
     }
 }
