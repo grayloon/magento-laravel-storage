@@ -5,6 +5,7 @@ namespace Grayloon\MagentoStorage\Support;
 use Grayloon\Magento\Magento;
 use Grayloon\MagentoStorage\Jobs\DownloadMagentoCategoryImage;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
+use Illuminate\Support\Str;
 
 class MagentoCategories extends PaginatableMagentoService
 {
@@ -37,8 +38,47 @@ class MagentoCategories extends PaginatableMagentoService
         }
 
         foreach ($categories as $apiCategory) {
-            $this->updateCategory($apiCategory);
+            if ($this->validCategory($apiCategory)) {
+                $this->updateCategory($apiCategory);
+            }
         }
+
+        return $this;
+    }
+
+    /**
+     * Determine if the category is valid.
+     *
+     * @param  array  $apiCategory
+     * @return bool
+     */
+    protected function validCategory($apiCategory)
+    {
+        if (! env('MAGENTO_DEFAULT_CATEGORY')) {
+            return true;
+        }
+
+        if (env('MAGENTO_DEFAULT_CATEGORY') == $apiCategory['id']) {
+            return true;
+        }
+
+        if (Str::contains($apiCategory['path'], '/' . env('MAGENTO_DEFAULT_CATEGORY') . '/')) {
+            return true;
+        }
+
+        $this->deleteIfExists($apiCategory['id']);
+        return false;
+    }
+
+    /**
+     * Delete the category if it exists.
+     *
+     * @param  int  $id
+     * @return void
+     */
+    protected function deleteIfExists($id)
+    {
+        MagentoCategory::where('id', $id)->delete();
 
         return $this;
     }
