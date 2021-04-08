@@ -38,9 +38,7 @@ class MagentoCategories extends PaginatableMagentoService
         }
 
         foreach ($categories as $apiCategory) {
-            if ($this->validCategory($apiCategory)) {
-                $this->updateCategory($apiCategory);
-            }
+            $this->updateCategory($apiCategory);
         }
 
         return $this;
@@ -110,6 +108,10 @@ class MagentoCategories extends PaginatableMagentoService
      */
     public function updateCategory($apiCategory)
     {
+        if (! $this->validCategory($apiCategory)) {
+            return;
+        }
+        
         $category = MagentoCategory::updateOrCreate(['id' => $apiCategory['id']], [
             'name'            => $apiCategory['name'],
             'slug'            => $this->findAttributeByKey('url_path', $apiCategory['custom_attributes']),
