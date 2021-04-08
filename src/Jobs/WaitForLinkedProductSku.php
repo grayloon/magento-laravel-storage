@@ -2,7 +2,6 @@
 
 namespace Grayloon\MagentoStorage\Jobs;
 
-use Exception;
 use Grayloon\Magento\Magento;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Support\MagentoProducts;
