@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Jobs;
 
 use Grayloon\Magento\Magento;
+use Grayloon\MagentoStorage\Models\MagentoProductCategory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -36,6 +37,8 @@ class SyncMagentoProductCategories implements ShouldQueue
         $this->links = (new Magento())->api('categories')
             ->products($this->categoryId)
             ->json();
+        
+        MagentoProductCategory::where('magento_category_id', $this->categoryId)->delete();
 
         foreach ($this->links as $link) {
             SyncMagentoProductCategory::dispatch($link['sku'], $this->categoryId, $link['position']);
