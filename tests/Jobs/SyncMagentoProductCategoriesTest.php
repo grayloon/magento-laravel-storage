@@ -3,6 +3,7 @@
 namespace Grayloon\MagentoStorage\Tests\Jobs;
 
 use Grayloon\MagentoStorage\Database\Factories\MagentoCategoryFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Jobs\SyncMagentoProductCategories;
 use Grayloon\MagentoStorage\Models\MagentoProductCategory;
@@ -44,5 +45,31 @@ class SyncMagentoProductCategoriesTest extends TestCase
         SyncMagentoProductCategories::dispatchNow($category->id);
 
         $this->assertEquals(0, MagentoProductCategory::count());
+    }
+
+    /** @test */
+    public function it_removes_out_of_sync_categories()
+    {
+        config(['magento.store_code' => 'foo']);
+        $category = MagentoCategoryFactory::new()->create();
+        $oldProductLink = MagentoProductCategoryFactory::new()->create([
+            'magento_category_id' => $category->id,
+        ]);
+        $otherCategoryLink = MagentoProductCategoryFactory::new()->create();
+        $product = MagentoProductFactory::new()->create();
+        Http::fake([
+            '*rest/foo/V1/categories/'.$category->id.'/products' => Http::response([
+                [
+                    'sku' => $product->sku,
+                    'category_id' => $category->id,
+                    'position' => 1,
+                ],
+            ], 200),
+        ]);
+
+        (new SyncMagentoProductCategories($category->id))->handle();
+
+        $this->assertEquals(2, MagentoProductCategory::count());
+        $this->assertDeleted($oldProductLink);
     }
 }
