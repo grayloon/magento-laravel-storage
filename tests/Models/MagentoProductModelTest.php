@@ -343,6 +343,24 @@ class MagentoProductModelTest extends TestCase
         $this->assertEquals('9.99', $product->load('customAttributes')->salePrice());
     }
 
+    public function test_sale_price_runs_through_current_date_on_special_to_date()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_price',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => '9.99',
+        ]);
+        $product->customAttributes()->create([
+            'attribute_type'    => 'special_to_date',
+            'attribute_type_id' => MagentoCustomAttributeTypeFactory::new()->create(),
+            'value'             => today()->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertEquals('9.99', $product->load('customAttributes')->salePrice());
+    }
+
     public function test_configurable_links_has_many_products_through()
     {
         $configurableProduct = MagentoProductFactory::new()->create();
