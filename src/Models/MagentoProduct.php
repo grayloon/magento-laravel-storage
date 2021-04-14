@@ -161,6 +161,7 @@ class MagentoProduct extends Model
         }
         if ($saleEnd) {
             $saleEnd = new Carbon($saleEnd->value);
+            $saleEnd = $saleEnd->endOfDay();
         }
 
         if ($saleStart) {
