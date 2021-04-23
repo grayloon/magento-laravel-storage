@@ -59,6 +59,21 @@ class HasExtensionAttributesTest extends TestCase
         $this->assertEquals($category->id, MagentoProductCategory::first()->magento_category_id);
         $this->assertEquals($product->id, MagentoProductCategory::first()->magento_product_id);
     }
+
+    /** @test */
+    public function it_skips_categories_that_dont_exist_in_database()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        (new FakeSupportingExtensionClass)->exposedSyncExtensionAttributes(['category_links' => [
+            [
+                'category_id' => "123",
+                'position'    => 1,
+            ],
+        ]], $product);
+
+        $this->assertEquals(0, MagentoProductCategory::count());
+    }
 }
 
 class FakeSupportingExtensionClass

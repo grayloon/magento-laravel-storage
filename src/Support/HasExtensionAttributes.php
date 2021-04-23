@@ -43,10 +43,14 @@ trait HasExtensionAttributes
     protected function resolveCategoryLinks($links, $product)
     {
         foreach ($links as $link) {
-            MagentoProductCategory::updateOrCreate([
-                'magento_product_id'  => $product->id,
-                'magento_category_id' => MagentoCategory::find($link['category_id'])->id,
-            ], ['position'            => $link['position']]);
+            $category = MagentoCategory::find($link['category_id']);
+
+            if ($category) {
+                MagentoProductCategory::updateOrCreate([
+                    'magento_product_id'  => $product->id,
+                    'magento_category_id' => $category->id,
+                ], ['position'            => $link['position']]);
+            }
         }
     }
 }

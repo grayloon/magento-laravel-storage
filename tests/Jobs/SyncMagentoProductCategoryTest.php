@@ -49,4 +49,14 @@ class SyncMagentoProductCategoryTest extends TestCase
 
         SyncMagentoProductCategory::dispatchNow('foo', $category->id, 1);
     }
+
+    /** @test */
+    public function it_doesnt_sync_product_with_missing_category()
+    {
+        $product = MagentoProductFactory::new()->create();
+
+        SyncMagentoProductCategory::dispatchNow($product->sku, 123, 1);
+
+        $this->assertEquals(0, MagentoProductCategory::count());
+    }
 }
