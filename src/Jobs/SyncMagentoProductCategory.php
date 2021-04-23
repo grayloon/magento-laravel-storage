@@ -2,13 +2,14 @@
 
 namespace Grayloon\MagentoStorage\Jobs;
 
-use Grayloon\MagentoStorage\Models\MagentoProduct;
-use Grayloon\MagentoStorage\Models\MagentoProductCategory;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Models\MagentoCategory;
+use Grayloon\MagentoStorage\Models\MagentoProductCategory;
 
 class SyncMagentoProductCategory implements ShouldQueue
 {
@@ -63,9 +64,14 @@ class SyncMagentoProductCategory implements ShouldQueue
     {
         $this->product = MagentoProduct::where('sku', $this->sku)->firstOrFail();
 
-        MagentoProductCategory::updateOrCreate([
-            'magento_product_id'  => $this->product->id,
-            'magento_category_id' => $this->categoryId,
-        ], ['position'            => $this->position]);
+        // verify that the category exists.
+        $category = MagentoCategory::find($this->categoryId);
+
+        if ($category) {
+            MagentoProductCategory::updateOrCreate([
+                'magento_product_id'  => $this->product->id,
+                'magento_category_id' => $this->categoryId,
+            ], ['position'            => $this->position]);
+        }
     }
 }
