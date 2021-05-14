@@ -82,11 +82,15 @@ class MagentoCustomers extends PaginatableMagentoService
                 'region'      => $address['region']['region'] ?? '',
                 'region_id'   => $address['region_id'] ?? 0,
                 'street'      => $address['street'][0] ?? '',
+                'street2'      => $address['street'][1] ?? null,
                 'telephone'   => $address['telephone'] ?? null,
                 'postal_code' => $address['postcode'] ?? null,
                 'city'        => $address['city'] ?? null,
                 'first_name'  => $address['firstname'] ?? null,
                 'last_name'   => $address['lastname'] ?? null,
+                'company'     => $address['company'] ?? null,
+                'default_shipping' => $address['default_shipping'] ?? false,
+                'default_billing'  => $address['default_billing'] ?? false,
             ]);
         }
 
