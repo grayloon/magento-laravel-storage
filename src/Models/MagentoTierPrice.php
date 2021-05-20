@@ -39,4 +39,14 @@ class MagentoTierPrice extends Model
     {
         return $this->belongsTo(MagentoProduct::class, 'magento_product_id');
     }
+
+    /**
+     * The Magento Customer Group ID belongs to the Magento Customer Group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group()
+    {
+        return $this->belongsTo(MagentoCustomerGroup::class, 'customer_group_id');
+    }
 }

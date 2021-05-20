@@ -23,6 +23,7 @@ class MagentoTierPriceFactory extends Factory
     {
         return [
             'magento_product_id'   => MagentoProductFactory::new(),
+            'customer_group_id'    => MagentoCustomerGroupFactory::new(),
             'value'                => $this->faker->randomFloat(2, 1, 500),
             'quantity'             => $this->faker->numberBetween(1, 100),
             'extension_attributes' => [],

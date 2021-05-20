@@ -4,6 +4,7 @@ namespace Grayloon\MagentoStorage\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class MagentoProduct extends Model
@@ -181,6 +182,26 @@ class MagentoProduct extends Model
         return ($saleEnd >= now())
             ? $salePrice->value
             : null;
+    }
+
+    /**
+     * Resolve the price based on the tier pricing.
+     *
+     * @return float
+     */
+    public function resolvePrice()
+    {
+        if (! Auth::check() || ! Auth::user() instanceof MagentoCustomer || ! $this->tierPrices) {
+            return $this->price;
+        }
+
+        $tierPrice = $this->tierPrices
+            ->filter(fn ($tier) => Auth::user()->group_id == $tier->customer_group_id)
+            ->first();
+
+        return $tierPrice
+            ? $tierPrice->value
+            : $this->price;
     }
 
     /**

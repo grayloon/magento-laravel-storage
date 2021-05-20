@@ -11,6 +11,7 @@ class CreateMagentoTierPricesTable extends Migration
         Schema::create('magento_tier_prices', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('magento_product_id')->index();
+            $table->bigInteger('customer_group_id')->index();
             $table->decimal('value', 15, 4)->default(0.00);
             $table->integer('quantity')->default(0);
             $table->text('extension_attributes')->nullable();
