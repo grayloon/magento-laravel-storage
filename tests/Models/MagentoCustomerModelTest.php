@@ -5,9 +5,14 @@ namespace Grayloon\MagentoStorage\Tests;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerAddressFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerGroupFactory;
 use Grayloon\MagentoStorage\Models\MagentoCustomer;
 use Grayloon\MagentoStorage\Models\MagentoCustomerAddress;
+use Grayloon\MagentoStorage\Models\MagentoCustomerGroup;
 use Illuminate\Support\Facades\Auth;
+
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertNotEmpty;
 
 class MagentoCustomerModelTest extends TestCase
 {
@@ -73,5 +78,20 @@ class MagentoCustomerModelTest extends TestCase
 
         $this->assertAuthenticated();
         $this->assertInstanceOf(MagentoCustomer::class, Auth::user());
+    }
+
+    /** @test */
+    public function the_group_id_belongs_to_customer_group()
+    {
+        $group = MagentoCustomerGroupFactory::new()->create();
+        $customer = MagentoCustomerFactory::new()->create([
+            'group_id' => $group->id,
+        ]);
+
+        $customer->load('customerGroup');
+
+        $this->assertNotEmpty($customer->customerGroup);
+        $this->assertInstanceOf(MagentoCustomerGroup::class, $customer->customerGroup);
+        $this->assertEquals($group->id, $customer->customerGroup->id);
     }
 }
