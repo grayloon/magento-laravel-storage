@@ -11,6 +11,7 @@ use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoTierPriceFactory;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
@@ -389,5 +390,17 @@ class MagentoProductModelTest extends TestCase
         $product->load('configurableProductOptions');
 
         $this->assertInstanceOf(MagentoConfigurableProductOption::class, $product->configurableProductOptions->first());
+    }
+
+    public function test_magento_product_can_have_many_price_tiers()
+    {
+        $product = MagentoProductFactory::new()->create();
+        MagentoTierPriceFactory::new()->count(5)->create([
+            'magento_product_id' => $product->id,
+        ]);
+
+        $response = $product->tierPrices()->get();
+        $this->assertNotEmpty($response);
+        $this->assertEquals(5, $response->count());
     }
 }

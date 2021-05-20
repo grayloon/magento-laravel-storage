@@ -182,4 +182,14 @@ class MagentoProduct extends Model
             ? $salePrice->value
             : null;
     }
+
+    /**
+     * The Magento Product can have many tier prices.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tierPrices()
+    {
+        return $this->hasMany(MagentoTierPrice::class, 'magento_product_id');
+    }
 }

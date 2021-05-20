@@ -29,4 +29,14 @@ class MagentoTierPrice extends Model
     protected $casts = [
         'extension_attributes' => 'array',
     ];
+
+    /**
+     * The Magento Product ID belongs to the Magento Product.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function product()
+    {
+        return $this->belongsTo(MagentoProduct::class, 'magento_product_id');
+    }
 }
