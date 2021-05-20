@@ -14,6 +14,7 @@ class CreateMagentoCustomerGroupsTable extends Migration
             $table->bigInteger('tax_class_id');
             $table->string('tax_class_name');
             $table->timestamps();
+            $table->timestamp('synced_at')->useCurrent();
         });
     }
 
