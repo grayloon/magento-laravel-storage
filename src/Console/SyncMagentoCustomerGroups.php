@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Grayloon\MagentoStorage\Console;
 
 use Exception;
 use Grayloon\Magento\Magento;
@@ -44,7 +44,7 @@ class SyncMagentoCustomerGroups extends Command
                 throw new Exception('Unable to locate Customer Groups.');
             }
 
-            $this->updateOrCreateCustomerGroups($groups);
+            $this->updateOrCreateCustomerGroups($groups->json());
         }
 
         $this->bar->finish();
@@ -69,7 +69,7 @@ class SyncMagentoCustomerGroups extends Command
 
         $groups = $this->magento->api('customerGroups')->search();
 
-        if (! $groups->ok() || $groups->json()['total_count']) {
+        if (! $groups->ok() || ! isset($groups->json()['total_count'])) {
             throw new Exception('Unable to locate Customer Groups.');
         }
 

@@ -11,13 +11,15 @@ trait HasMagentoCustomerGroups
      *
      * @param array $groups
      *
-     * @return void
+     * @return $this
      */
     protected function updateOrCreateCustomerGroups($groups)
     {
-        foreach ($groups as $group) {
+        foreach ($groups['items'] as $group) {
             $this->updateOrCreateCustomerGroup($group);
         }
+
+        return $this;
     }
 
     /**
@@ -29,9 +31,7 @@ trait HasMagentoCustomerGroups
     protected function updateOrCreateCustomerGroup($group)
     {
         return MagentoCustomerGroup::updateOrCreate(
-            [
-                'id' => $group['id'],
-            ],
+            ['id' => $group['id']],
             [
                 'code' => $group['code'],
                 'tax_class_id' => $group['tax_class_id'],
