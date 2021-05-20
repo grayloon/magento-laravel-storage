@@ -11,9 +11,6 @@ use Grayloon\MagentoStorage\Models\MagentoCustomerAddress;
 use Grayloon\MagentoStorage\Models\MagentoCustomerGroup;
 use Illuminate\Support\Facades\Auth;
 
-use function PHPUnit\Framework\assertEquals;
-use function PHPUnit\Framework\assertNotEmpty;
-
 class MagentoCustomerModelTest extends TestCase
 {
     public function test_can_create_magento_customer()
