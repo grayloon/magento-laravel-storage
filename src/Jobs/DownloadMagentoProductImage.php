@@ -44,6 +44,13 @@ class DownloadMagentoProductImage implements ShouldQueue
     public $sku;
 
     /**
+     * Determine if the image already exists.
+     *
+     * @var bool
+     */
+    protected $alreadyExists = false;
+
+    /**
      * Create a new job instance.
      *
      * @return void
@@ -64,6 +71,11 @@ class DownloadMagentoProductImage implements ShouldQueue
      */
     public function handle()
     {
+        if (Storage::exists('public/product/'.$this->uri)) {
+            $this->alreadyExists = true;
+            return $this;
+        }
+
         try {
             $contents = file_get_contents($this->fullUrl);
         } catch (Exception $e) {
