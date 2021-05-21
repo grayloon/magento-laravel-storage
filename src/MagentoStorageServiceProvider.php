@@ -84,6 +84,7 @@ class MagentoStorageServiceProvider extends ServiceProvider
             Console\SyncMagentoCustomAttributeTypesCommand::class,
             Console\SyncMagentoWebsitesCommand::class,
             Console\MagentoCleanAttributesCommand::class,
+            Console\SyncMagentoCustomerGroups::class,
         ]);
     }
 }

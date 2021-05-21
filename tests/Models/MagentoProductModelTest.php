@@ -7,10 +7,12 @@ use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductLinkFac
 use Grayloon\MagentoStorage\Database\Factories\MagentoConfigurableProductOptionFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoCustomAttributeTypeFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoCustomerFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductCategoryFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductLinkFactory;
 use Grayloon\MagentoStorage\Database\Factories\MagentoProductMediaFactory;
+use Grayloon\MagentoStorage\Database\Factories\MagentoTierPriceFactory;
 use Grayloon\MagentoStorage\Models\MagentoCategory;
 use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
@@ -389,5 +391,58 @@ class MagentoProductModelTest extends TestCase
         $product->load('configurableProductOptions');
 
         $this->assertInstanceOf(MagentoConfigurableProductOption::class, $product->configurableProductOptions->first());
+    }
+
+    public function test_magento_product_can_have_many_price_tiers()
+    {
+        $product = MagentoProductFactory::new()->create();
+        MagentoTierPriceFactory::new()->count(5)->create([
+            'magento_product_id' => $product->id,
+        ]);
+
+        $response = $product->tierPrices()->get();
+        $this->assertNotEmpty($response);
+        $this->assertEquals(5, $response->count());
+    }
+
+    /** @test */
+    public function it_returns_tier_price_on_resolve_price()
+    {
+        $product = MagentoProductFactory::new()->create();
+        $tierPrice = MagentoTierPriceFactory::new()->create([
+            'magento_product_id' => $product->id,
+            'value' => 10.99,
+        ]);
+        $customer = MagentoCustomerFactory::new()->create([
+            'group_id' => $tierPrice->customer_group_id,
+        ]);
+
+        $this->actingAs($customer);
+
+        $product->load('tierPrices');
+        $this->assertEquals(10.99, $product->resolvePrice());
+    }
+
+    /** @test */
+    public function it_returns_price_on_resolve_price()
+    {
+        $product = MagentoProductFactory::new()->create([
+            'price' => 50.99,
+        ]);
+        $product->load('tierPrices');
+        $this->assertEquals(50.99, $product->resolvePrice());
+
+        MagentoTierPriceFactory::new()->create([
+            'magento_product_id' => $product->id,
+            'value' => 10.99,
+        ]);
+
+        $product->load('tierPrices');
+        $this->assertEquals(50.99, $product->resolvePrice());
+
+        $customer = MagentoCustomerFactory::new()->create();
+        $this->actingAs($customer);
+        $product->load('tierPrices');
+        $this->assertEquals(50.99, $product->resolvePrice());
     }
 }

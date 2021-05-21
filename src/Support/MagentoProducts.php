@@ -8,6 +8,7 @@ use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOption;
 use Grayloon\MagentoStorage\Models\MagentoConfigurableProductOptionValue;
 use Grayloon\MagentoStorage\Models\MagentoCustomAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
+use Grayloon\MagentoStorage\Models\MagentoTierPrice;
 use Illuminate\Support\Str;
 
 class MagentoProducts extends PaginatableMagentoService
@@ -57,6 +58,7 @@ class MagentoProducts extends PaginatableMagentoService
         $this->syncProductLinks($apiProduct['product_links'], $product);
         $this->downloadProductImages($apiProduct['media_gallery_entries'] ?? [], $product);
         $this->syncStockItemAsAttributes($apiProduct['extension_attributes']['stock_item'] ?? [], $product);
+        $this->syncPriceTiers($apiProduct, $product);
 
         if ($product->type === 'configurable') {
             $this->syncConfigurableProductAttributes($product, $apiProduct['extension_attributes']['configurable_product_links'] ?? [], $apiProduct['extension_attributes']['configurable_product_options'] ?? []);
@@ -169,6 +171,34 @@ class MagentoProducts extends PaginatableMagentoService
                     ]);
                 }
             }
+        }
+    }
+
+    /**
+     * Sync the available product price tiers to the provided Magento Product.
+     *
+     * @param  array   $apiProduct
+     * @param  \Grayloon\MagentoStorage\Models\MagentoProduct  $product
+     *
+     * @return $this
+     */
+    protected function syncPriceTiers($apiProduct, $product)
+    {
+        // Truncate any existing prices.
+        $product->tierPrices()->delete();
+
+        if (! isset($apiProduct['tier_prices']) ||  ! $apiProduct['tier_prices']) {
+            return $this;
+        }
+
+        foreach ($apiProduct['tier_prices'] as $priceTier) {
+            MagentoTierPrice::create([
+                'magento_product_id' => $product->id,
+                'customer_group_id'  => $priceTier['customer_group_id'],
+                'value'              => $priceTier['value'],
+                'quantity'           => $priceTier['qty'],
+                'extension_attributes' => $priceTier['extension_attributes'],
+            ]);
         }
     }
 }

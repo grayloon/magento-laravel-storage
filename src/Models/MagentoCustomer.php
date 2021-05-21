@@ -59,4 +59,14 @@ class MagentoCustomer extends Model implements AuthenticatableContract, Authoriz
     {
         return $this->hasMany(MagentoCustomerAddress::class, 'customer_id');
     }
+
+    /**
+     * The Group ID belongs to the Magento Customer Group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function customerGroup()
+    {
+        return $this->belongsTo(MagentoCustomerGroup::class, 'group_id');
+    }
 }

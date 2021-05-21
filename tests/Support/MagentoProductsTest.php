@@ -15,6 +15,7 @@ use Grayloon\MagentoStorage\Models\MagentoExtensionAttribute;
 use Grayloon\MagentoStorage\Models\MagentoExtensionAttributeType;
 use Grayloon\MagentoStorage\Models\MagentoProduct;
 use Grayloon\MagentoStorage\Models\MagentoProductMedia;
+use Grayloon\MagentoStorage\Models\MagentoTierPrice;
 use Grayloon\MagentoStorage\Support\MagentoProducts;
 use Grayloon\MagentoStorage\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
@@ -239,6 +240,23 @@ class MagentoProductsTest extends TestCase
         $this->assertNotEquals($link->id, MagentoConfigurableProductLink::first()->id);
     }
 
+    /** @test */
+    public function it_can_sync_price_tiers()
+    {
+        Queue::fake();
+        $product = $this->fakeProduct();
+
+        $magentoProducts = new MagentoProducts();
+        $magentoProducts->updateOrCreateProduct($product);
+
+        $product = MagentoProduct::with('tierPrices')->first();
+
+        $this->assertNotEmpty($product);
+        $this->assertNotEmpty($product->tierPrices);
+        $this->assertInstanceOf(MagentoTierPrice::class, $product->tierPrices->first());
+        $this->assertEquals(MagentoTierPrice::count(), 1);
+    }
+
     protected function fakeProduct($attributes = null)
     {
         $product = [
@@ -291,6 +309,16 @@ class MagentoProductsTest extends TestCase
                     'linked_product_sku' => 'bar',
                     'linked_product_type' => 'simple',
                     'position' => 0,
+                ],
+            ],
+            'tier_prices' => [
+                [
+                    'customer_group_id' => 1,
+                    'qty' => 1,
+                    'value' => 99.99,
+                    'extension_attributes' => [
+                        'website_id' => 1,
+                    ],
                 ],
             ],
             'media_gallery_entries' => [
