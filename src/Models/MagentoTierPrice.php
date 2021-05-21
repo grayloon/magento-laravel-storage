@@ -16,6 +16,7 @@ class MagentoTierPrice extends Model
      */
     protected $fillable = [
         'magento_product_id',
+        'customer_group_id',
         'value',
         'quantity',
         'extension_attributes',
