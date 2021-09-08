@@ -15,14 +15,6 @@ trait HasConfigurableProducts
      */
     protected function resolveConfigurableOptions($configurableProduct)
     {
-        $configurableProduct->load(
-            'configurableLinks',
-            'configurableLinks.customAttributes',
-            'configurableProductOptions',
-            'configurableProductOptions.attribute',
-            'configurableProductOptions.optionValues'
-        );
-
         if ($configurableProduct->configurableLinks->isEmpty() || $configurableProduct->configurableProductOptions->isEmpty()) {
             return $configurableProduct;
         }
